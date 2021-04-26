@@ -309,7 +309,6 @@
 	}	
 
 ?>
-
 <form action="payment.php?action=stud_payment" method="POST">
 	<section class="homesection">
 		<div class="container">
@@ -352,6 +351,7 @@
 				<div class="col-auto">
                     <button type="submit" class="btn btn-primary" name="pay" value= "submit" >Submit</button>     
                 </div>
+					<center><a href="paySearch.php?action=pay_search" style="color:#fd0d66;">Click here to search for payments</a>	</center>
 				</div>
 				<div class="col-md-2"></div>
 			</div>
