@@ -75,12 +75,12 @@ include_once('header.php');
               <?php     
           }
         // USER  
-        if(isset($_SESSION['user']) && $_SESSION['user'] == 1) { ?>
+        if(isset($_SESSION['user']) && $_SESSION['user'] != 0) { ?>
           <li <?php
             if (isset($_GET['action']) && $_GET['action'] == 'payment') {
               echo 'class="active"';
             }
-              ?>><a href="index.php?action=payment">Payment</a></li>
+              ?>><a href="payment.php?action=stud_payment">Payment</a></li>
               <?php     
           }
         // ADMIN

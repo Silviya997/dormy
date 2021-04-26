@@ -6,7 +6,7 @@ include_once('header.php');
 include_once('sessionHeader.php');
 
 $acc= date('Y-m-d');
-$left = date('Y-m-d', strtotime("+6 months", strtotime($acc)));
+$left = date('Y-m-d', strtotime("+12 months", strtotime($acc)));
 
 $errors = [];
 
@@ -77,6 +77,13 @@ $errors = [];
                             $stUpdate = $conn->prepare($statusUpdate);
                             $stUpdate->execute();
                             echo "Successfully accommodated!";
+
+                            $InsertInPayment = "INSERT INTO `payment` (student_id) VALUES (:STUDID)";
+                            $InsertData = [
+                                ':STUDID' => $ID
+                            ];
+                            $stmInser = $conn->prepare($InsertInPayment);
+                            $stmInser->execute($InsertData);
                         }
                     }
                 }

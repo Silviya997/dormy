@@ -19,6 +19,9 @@ include_once('sessionHeader.php');
 							<option value="fakNo" >By student Id</option>
 							<option value="RoomNo">By room No</option>
 							<option value="egn">By PINs</option>
+							<option value="university">By University</option>
+							<option value="course">By Course</option>
+							<option value="semester">By Semester</option>
 						</select>
 					</label>
 					</div>
