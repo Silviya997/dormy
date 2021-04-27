@@ -4,6 +4,8 @@ session_start();
 require_once('conn.php');
 include_once('header.php');
 include_once('sessionHeader.php');
+
+
 ?>
 <form action="search.php?action=searchStudent" method="POST" >
 	<section class="search_sec">
@@ -100,8 +102,11 @@ include_once('sessionHeader.php');
 							<td > <?php echo $row['accommodated'];?></td>
 							<td> <?php echo $row['is_left'];?></td>
 							<td> <?php echo $row['RoomNo'];?></td>
+							<?php
+							if(isset($_SESSION['user']) && $_SESSION['user'] == 2) { ?>
 							<td><button type="button" name="edit" onclick="location.href='edit.php?editId=<?php echo $row['id'];?>'">Edit</button> </td>
-							</tr>
+							<?php } ?>
+						</tr>
 						<?php
                     }
 					?>

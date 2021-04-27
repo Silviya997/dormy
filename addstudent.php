@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once('conn.php');
 include_once('header.php');
 include_once('sessionHeader.php');
@@ -176,9 +177,10 @@ include_once('sessionHeader.php');
                 }
             }
     }
-
+ 
 ?>
-<form action="guardian.php?action=addstudent" method="POST">
+
+<form action="addStudent.php?action=addstudent" method="POST">
     <section class="addstudent">
         <div class="container">
     <div class="row">

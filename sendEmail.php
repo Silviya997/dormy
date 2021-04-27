@@ -2,13 +2,12 @@
 
 use PHPMailer\PHPMailer\PHPMailer;
 
-    if(isset($_POST['name']) && isset($_POST['email'])) {
-      
+    if(isset($_POST['name']) && isset($_POST['email']) && isset($_POST['body']) ) {
+
         $name = $_POST['name'];
         $email= $_POST['email'];
         $subject = $_POST['subject'];
         $body = $_POST['body'];
-
 
         require_once "PHPMailer/PHPMailer.php";
         require_once "PHPMailer/SMTP.php";
@@ -39,6 +38,7 @@ use PHPMailer\PHPMailer\PHPMailer;
     }
         exit(json_encode(array("status" => $status, "response" => $response)));
     }
+
 
 ?>
 

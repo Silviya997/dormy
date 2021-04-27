@@ -52,7 +52,9 @@
             if ($_POST['left'] < $_POST['acc']) {
               array_push($errors, 'Invalid checkout date');
             } else {
-                $queryCheck = "SELECT * FROM rooms r LEFT JOIN accdata a ON a.room_id=r.id AND (accommodated <= :ACC AND is_left >= :IS_LEFT OR accommodated >= :ACC AND accommodated < :IS_LEFT OR is_left > :ACC AND is_left < :IS_LEFT) WHERE a.room_id IS NULL";
+                $queryCheck = "SELECT * FROM rooms r LEFT JOIN accdata a ON a.room_id=r.id 
+                AND (accommodated <= :ACC AND is_left >= :IS_LEFT OR accommodated >= :ACC AND accommodated < :IS_LEFT OR is_left > :ACC AND is_left < :IS_LEFT) 
+                WHERE a.room_id IS NULL";
                 $d = [
                 ':ACC' => $_POST['acc'],
                 ':IS_LEFT' => $_POST['left'],

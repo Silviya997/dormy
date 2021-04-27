@@ -45,11 +45,11 @@
         include_once('sessionHeader.php');
         include_once('contactform.php');
 
-    }
-    elseif(isset($_SESSION['user']) && $_SESSION['user'] == 2) {
-    ?>
-    <div>Admin</div>
-    <?php
+    // }
+    // elseif(isset($_SESSION['user']) && $_SESSION['user'] == 2) {
+    // 
+     // <div>Admin</div>
+  
     } else {
         include_once('common.php');
         include_once('contactform.php');

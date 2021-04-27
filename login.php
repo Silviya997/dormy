@@ -54,7 +54,8 @@ if (isset($_POST['login_user'])) {
 			array_push($errors, 'Something went wrong! Please, contact Admin!');
 		} else {
 			array_push($errors, 'Invalid username/password!');
-			}
+			
+		}
 		} 
 }
 
@@ -69,7 +70,9 @@ if (isset($_POST['login_user'])) {
                 <input type="text" class="form-control" placeholder="Username" name="user_name" >
                 <input type="password" class="form-control" placeholder="Password"  name="pass" >
                 <button class="btn btn-lg btn-primary btn-block" type="submit" name="login_user"> Sign in</button><br>
-                <p class="notmember">Not yet a member? <a href="registration.php">Registration</a></p>     
+                <p class="notmember" style="margin-bottom:0px">Not yet a member? <a href="registration.php">Registration</a></p>   
+				<p class="notmember"><a href="index.php?action=passForgot" style="color:deeppink">Forgot password</a></p>     
+  
 				<div>
 					<?php
 					 if (!empty($errors)) {

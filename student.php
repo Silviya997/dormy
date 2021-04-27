@@ -18,12 +18,18 @@
    ];
    $stmshow = $conn->prepare($queryshow);
    $stmshow->execute($datashow);
+
+   $payShow = "SELECT * FROM `payment` WHERE student_id = :id";
+   $dataPay = [
+    ':id' => $_SESSION['student_id']
+   ];
+   $payStm = $conn->prepare($payShow);
+   $payStm->execute($dataPay);
 ?>
 
 <form action="index.php?action=student" method="POST">
     <section class="main_section">
     <div class="container">
-
         <h2 class="title">Welcome to VUTP Dormitory</h2>
         <div class="table-responsive-sm">
             <table class="table">
@@ -45,7 +51,6 @@
                 <?php
                     while($row=$stmshow->fetch(PDO::FETCH_OBJ)) {
                         $id = $row->id;
-                        $fakNo = $row->fakNo;
                 ?>
                     <tr>
                         <td> <?php echo $row->f_name;?></td>
@@ -66,23 +71,56 @@
             </table>
             <small><a href="contact.php" style="color:red">*If these aren't your data, please contact Admin.</a></small><br>
             <small><a href="index.php?action=newpass" style="color:blue">*If you want to change your password, click here.</a></small>
-
+            <h4 class="title" style="margin-top:1rem">Your payments</h4>
+            <div class="table-responsive-sm">
+            <table class="table">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">January</th>
+                        <th scope="col">February</th>
+                        <th scope="col">March</th>
+                        <th scope="col">April</th>
+						<th scope="col">May</th>
+                        <th scope="col">June</th>
+                        <th scope="col">July</th>
+                        <th scope="col">August</th>
+                        <th scope="col">September</th>
+                        <th scope="col">October</th>
+                        <th scope="col">November</th>
+                        <th scope="col">December</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php
+                    while($res=$payStm->fetch(PDO::FETCH_OBJ)) {
+                   
+                ?>
+                    <tr>
+                        <td> <?php echo $res->January;?></td>
+                        <td > <?php echo $res->February;?></td>
+                        <td> <?php echo $res->March;?></td>
+                        <td> <?php echo $res->April;?></td>
+                        <td > <?php echo $res->May;?></td>
+                        <td> <?php echo $res->June;?></td>
+                        <td> <?php echo $res->July;?></td>
+                        <td> <?php echo $res->August;?></td>
+                        <td> <?php echo $res->September;?></td>
+                        <td> <?php echo $res->October;?></td>
+                        <td> <?php echo $res->November;?></td>
+                        <td> <?php echo $res->December;?></td>
+                    </tr>
+                <?php
+                    }
+                ?>
+                </tbody>
+            </table>
         </div>
-
 
         <?php
             if(!empty($fakNo)) { 
 
             } else {
                 ?>
-                <!-- <p>Please enter missing data</p>
-                <div id="first">
-            <input type="text" name="fakNo" placeholder="Fak No"> 
-            <input type="text" name="uni" placeholder="University"> 
-            <input type="text" name="course" placeholder="Course"> 
-            <input type="text" name="sem" placeholder="Semester"> 
-            <input type="submit" name="add"> 
-        </div> -->
         <div id="first">
         <div class="container">
             <div class="row">  
@@ -106,22 +144,15 @@
                 </div>
             </div>
         </div>
-</div>
+    </div>
                 <?php
                      if(isset($_POST['add'])) { 
                         $errors = [];
-
-                        // $fn = $_POST['fakNo'];
-                        // $uni = $_POST['uni'];
-                        // $course = $_POST['course'];
-                        // $sem = $_POST['sem'];
                         $fn = filter_input(INPUT_POST, 'fakNo', FILTER_SANITIZE_STRING);
                         $uni = strtoupper(filter_input(INPUT_POST, 'uni', FILTER_SANITIZE_STRING));
                         $course = strtoupper(filter_input(INPUT_POST, 'course', FILTER_SANITIZE_STRING));
                         $sem = filter_input(INPUT_POST, 'sem', FILTER_SANITIZE_STRING);
-                    
 
-                        // if (!empty($fn)) { 
                             if (!empty($fn)) { 
                                 if(!preg_match('/^[0-9]*$/', $fn)){ 
                                     array_push($errors, "Fak NO is invalid");

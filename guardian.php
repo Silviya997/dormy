@@ -150,7 +150,7 @@ if(!isset($_GET['action'])) {
                   </div>
                 </div>
                 <div class="align-self-center">
-                <h2 class="h1 mb-0" ><a href="guardian.php?action=addstudent" style="color:deeppink">Add user</a></h2 >
+                <h2 class="h1 mb-0" ><a href="addStudent.php?action=addstudent" style="color:deeppink">Add user</a></h2 >
                 </div>
               </div>
             </div>

@@ -59,14 +59,14 @@ include_once('header.php');
         // ADMIN
         if(isset($_SESSION['user']) && $_SESSION['user'] == 2) { ?>
           <li <?php
-            if (isset($_GET['action']) && $_GET['action'] == 'admin') {
+            if (!isset($_GET['action'])) {
               echo 'class="active"';
             }
-              ?>><a href="index.php?action=admin">Home</a></li>
+              ?>><a href="admin.php">Home</a></li>
               <?php     
           }
         // COMMON
-        if(isset($_SESSION['user'])) { ?>
+        if(isset($_SESSION['user']) && $_SESSION['user'] != 2) { ?>
           <li <?php
             if (isset($_GET['action']) && $_GET['action'] == 'contact') {
               echo 'class="active"';
@@ -75,32 +75,15 @@ include_once('header.php');
               <?php     
           }
         // USER  
-        if(isset($_SESSION['user']) && $_SESSION['user'] != 0) { ?>
+        if(isset($_SESSION['user']) && $_SESSION['user'] == 1) { ?>
           <li <?php
-            if (isset($_GET['action']) && $_GET['action'] == 'payment') {
+            if (isset($_GET['action']) && $_GET['action'] == 'stud_payment') {
               echo 'class="active"';
             }
               ?>><a href="payment.php?action=stud_payment">Payment</a></li>
               <?php     
           }
-        // ADMIN
-        if(isset($_SESSION['user']) && $_SESSION['user'] == 2) { ?>
-          <li <?php
-            if (isset($_GET['action']) && $_GET['action'] == 'data') {
-              echo 'class="active"';
-            }
-              ?>><a href="index.php?action=data">Data</a></li>
-              <?php     
-          }
-          //COMMON
-          if(isset($_SESSION['user']) && $_SESSION['user'] == 0) { ?>
-            <li <?php
-              if (isset($_GET['action']) && $_GET['action'] == 'room') {
-                echo 'class="active"';
-              }
-                ?>><a href="admin.php?action=room">Rooms</a></li>
-                <?php     
-            }
+       
             if (isset($_SESSION['user'])) {
               ?> <li class="nav-item"> <a href="logout.php" >Logout</a></li>
               <?php

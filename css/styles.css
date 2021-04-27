@@ -163,7 +163,7 @@ a {
     }
 }
  /* REGISTER */
-.register, .login {
+.register, .login, .for_pass {
     margin: 11rem 7rem;
 }
 .container-lg {
@@ -192,7 +192,7 @@ small {
     color: rgb(82, 80, 80);}
 
 @media (max-width:768px) {
-    .register {
+    .register, .for_pass {
         margin: 7rem 5rem;
     }
     .mail, .contact, .search_sec {
@@ -307,3 +307,39 @@ td {
 #uppercaseInput {
     text-transform: uppercase;
 }
+
+/* admin */
+.side-navbar {
+    height: 100%;
+    position: fixed;
+    margin-left: -300px;
+    background-color: #92a0e0;
+  }
+  
+  .nav-link:active,
+  .nav-link:focus,
+  .nav-link:hover {
+    background-color: #ffffff26;
+  }
+  
+  .my-container {
+    transition: 0.4s;
+  }
+  
+  .active-nav {
+    margin-left: 0;
+  }
+  
+  /* for main section */
+  .active-cont {
+    margin-left: 180px;
+  }
+  
+  #menu-btn {
+    background-color: #100901;
+    color: #fff;
+    margin-left: -62px;
+  }
+  .adminHome {
+      margin: 3rem;
+  }
