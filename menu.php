@@ -65,6 +65,7 @@ include_once('header.php');
               ?>><a href="admin.php">Home</a></li>
               <?php     
           }
+          
         // COMMON
         if(isset($_SESSION['user']) && $_SESSION['user'] != 2) { ?>
           <li <?php

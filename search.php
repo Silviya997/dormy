@@ -104,7 +104,7 @@ include_once('sessionHeader.php');
 							<td> <?php echo $row['RoomNo'];?></td>
 							<?php
 							if(isset($_SESSION['user']) && $_SESSION['user'] == 2) { ?>
-							<td><button type="button" name="edit" onclick="location.href='edit.php?editId=<?php echo $row['id'];?>'">Edit</button> </td>
+							<td><button type="button" name="edit" onclick="location.href='editUser.php?editId=<?php echo $row['id'];?>'">Edit</button> </td>
 							<?php } ?>
 						</tr>
 						<?php

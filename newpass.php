@@ -1,20 +1,18 @@
 <?php
     session_start();
 
-	if(!isset($_SESSION['user']) || $_SESSION['user'] != 0){
+	if(!isset($_SESSION['user']) || $_SESSION['user'] == 1){
 		header('Location:index.php');
 	}
 
     if(!isset($_SESSION['student_id'])) {
         session_start();
     }
-    
     require_once('conn.php');
     include_once('header.php');
     include_once('sessionHeader.php');
 
-    
-
+  
     if(isset($_POST['change'])) {
         $id = $_SESSION['student_id'];
         $errors = [];

@@ -38,7 +38,7 @@ if (isset($_POST['login_user'])) {
 			$_SESSION['student_id'] = $result['id'];
 			switch ($role) {
                 case '2':
-					header('location: index.php?action=admin');
+					header('location: admin.php');
 				break;
 
 				case '1':

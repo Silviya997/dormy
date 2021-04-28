@@ -38,6 +38,7 @@
 <section class="res_section">
 <div class="container">
 <?php
+
 	if(isset($_POST['check'])) {
 		$post_acc = $_POST['acc'];
         $post_left = $_POST['left'];
@@ -48,6 +49,7 @@
 		if (empty($_POST['left'])) {
 			array_push($errors, 'Choose TO date!');
 		}
+
         if (empty($errors)) {
             if ($_POST['left'] < $_POST['acc']) {
               array_push($errors, 'Invalid checkout date');
@@ -63,7 +65,6 @@
                 $stmt->execute($d);
                 while ($row = $stmt->fetch()) {
                     ?>
-                    <!-- <h2 class="title">Results</h2> -->
                     <div class="table-responsive-sm">
                     <table class="table">
                         <thead class="table-light">
@@ -75,7 +76,12 @@
                         <tr>
 							<td> <?php echo $row['roomNo'];?></td>
 							<td> <?php echo $row['stateOfroom'];?></td>
+                            <?php
+                            if(isset($_SESSION['user']) && $_SESSION['user'] == 1) { ?>
                             <td><button type="button" name="add" onclick="location.href='data.php?action=addData'">Edit</button> </td>
+                            <?php
+                            }
+                            ?>
                         </thead>
                     </table>
                     </div>

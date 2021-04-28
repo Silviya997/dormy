@@ -175,6 +175,9 @@ a {
 .mail, .contact, .search_sec{
     margin: 5rem;
 }
+.editRoom {
+    margin: 7rem 12rem;
+}
 .form-control {
     font-size: 18px;
     border-radius: 10px;
@@ -192,7 +195,7 @@ small {
     color: rgb(82, 80, 80);}
 
 @media (max-width:768px) {
-    .register, .for_pass {
+    .register, .for_pass, .editRoom {
         margin: 7rem 5rem;
     }
     .mail, .contact, .search_sec {
