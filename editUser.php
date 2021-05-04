@@ -9,14 +9,15 @@
 
     $editid=$_GET['editId'];
 
-    $editQuery = " SELECT * FROM user u RIGHT JOIN accdata a ON u.id=a.userId WHERE u.id = :id";
+    $editQuery = "SELECT * FROM user u INNER JOIN accdata a ON u.id=a.userId  WHERE u.id=:id";
     $editStm = $conn->prepare($editQuery);
 			$editData = [
 			':id' => $editid
 			];
 			$editStm->execute($editData);
             $row=$editStm->fetch();
-            
+            $room = $row['RoomNo'];
+            // var_dump($room);exit;
             if(isset($_POST['reg_user'])) {   
                 
                 $errors=[];
@@ -34,7 +35,7 @@
                 $acc = $_POST['acc'];
                 $is_left = $_POST['is_left'];
                 $roomNo = $_POST['roomNo'];
-                
+
 
                 if (empty($first_name)) { 
                     array_push($errors, "First name is required"); 
@@ -94,6 +95,7 @@
                         array_push($errors, "Invalid input. Phone must be between 10 and 14 numbers.");
                     }
                 }
+            
                  if (empty($fn)) { 
                     array_push($errors, "Fak No is required"); 
                 }
@@ -107,9 +109,9 @@
                         array_push($errors, "Invalid input. Left can not be < than Accommodated.");
                     }
                 }
-
+              
                 if(empty($errors)) {
-                    $queryy = "SELECT * FROM rooms WHERE roomNo = :nomer";
+                    $queryy = "SELECT * FROM rooms WHERE roomNo = :nomer AND stateOfroom = 'free'";
                     $dataa = [
                         ':nomer' => $_POST['roomNo']
                     ];
@@ -120,8 +122,8 @@
                     if($stt->rowCount() == 1) {
                         $roomId = $rez['id']; 
 
-                    $querya = "UPDATE user INNER JOIN accdata ON user.id = accdata.userId  SET `f_name`=:fn, `m_name`=:md, `l_name`=:ln, `egn`=:egn, `email`=:mail, `phone`=:tel,
-                      `fakNo`=:f, `university`=:u, `course`=:c, `semester`=:s, `accommodated`=:acc, `is_left`=:isleft, `RoomNo`=:roomno, `room_id`=:roomId 
+                    $querya = "UPDATE user INNER JOIN accdata ON user.id = accdata.userId SET `f_name`=:fn, `m_name`=:md, `l_name`=:ln, `egn`=:egn, `email`=:mail, `phone`=:tel,
+                      `fakNo`=:f, `university`=:u, `course`=:c, `semester`=:s, `accommodated`=:acc, `is_left`=:isleft, `RoomNo`=:roomno, `room_id`=:roomId
                        WHERE accdata.userId = :ID"; 
                     $statementup = $conn->prepare($querya);
 
@@ -140,7 +142,7 @@
                         ':acc' => $_POST['acc'],
                         ':isleft' => $_POST['is_left'],
                         ':roomno' => $_POST['roomNo'],
-                        ':roomId' => $roomId
+                        ':roomId' => $roomId,
                     ];
                     $update1 = $statementup->execute($dataadd); 
                     if ($update1 == true) {
@@ -156,18 +158,24 @@
                             $statusUpdate = "UPDATE `rooms` SET `stateOfroom` = 'occupied' WHERE roomNo=$roomNo";
                             $stUpdate = $conn->prepare($statusUpdate);
                             $stUpdate->execute();
+                          
+                          $U = "UPDATE `rooms` SET `stateOfroom` = 'free' WHERE roomNo=$room";
+                            $SU = $conn->prepare($U);
+                            $SU->execute();
                           }  
                        ?>
                        <meta http-equiv="refresh" content="0;url='editUser.php?editId=<?php echo $row['id'];?>'"/>
                         <?php
                     }
                            
+                } else {
+                    array_push($errors,  'This room is occupied');
                 }
     
                     
                 }
             }
-            }
+            
 ?>
 
 <form action="editUser.php?editId=<?php echo $row['id'];?>" method="POST">
@@ -184,43 +192,43 @@ include_once('errors.php');
             <div class="row g-3" id="row_center">
                
                 <div class="col-auto">
-                   First name <input type="text" name="first_name" class="form-control" value="<?php echo $row['f_name']?>">
+                   First name <input type="text" name="first_name" class="form-control" value="<?php echo $row['f_name'];?>">
                 </div>
                 <div class="col-auto">
-                  Middle name  <input type="text" name="mid_name" class="form-control" value="<?php echo $row['m_name']?>">
+                  Middle name  <input type="text" name="mid_name" class="form-control" value="<?php echo $row['m_name'];?>">
                 </div>
                 <div class="col-auto">
-                  Last name  <input type="text" name="l_name" class="form-control" value="<?php echo $row['l_name']?>">
+                  Last name  <input type="text" name="l_name" class="form-control" value="<?php echo $row['l_name'];?>">
                 </div>
                 <div class="col-auto">
-                   PINs <input type="" name="egn" class="form-control" value="<?php echo $row['egn']?>">
+                   PINs <input type="" name="egn" class="form-control" value="<?php echo $row['egn'];?>">
                 </div>
                 <div class="col-auto">
-                   Email <input type="text" name="email" class="form-control" value="<?php echo $row['email']?>">
+                   Email <input type="text" name="email" class="form-control" value="<?php echo $row['email'];?>">
                 </div>
                 <div class="col-auto">
-                  Phone <input type="text" name="phone" class="form-control" value="<?php echo $row['phone']?>">
+                  Phone <input type="text" name="phone" class="form-control" value="<?php echo $row['phone'];?>">
                 </div>
                 <div class="col-auto">
-                   Faculty No <input type="text" name="fakNo" class="form-control" value="<?php echo $row['fakNo']?>"> 
+                   Faculty No <input type="text" name="fakNo" class="form-control" value="<?php echo $row['fakNo'];?>"> 
                 </div>
                 <div class="col-auto">
-                   University <input type="text" name="uni" class="form-control" value="<?php echo $row['university']?>" id="uppercaseInput"> 
+                   University <input type="text" name="uni" class="form-control" value="<?php echo $row['university'];?>" id="uppercaseInput"> 
                 </div>
                 <div class="col-auto">
-                   Course <input type="text" name="course" class="form-control" value="<?php echo $row['course']?>" id="uppercaseInput" >
+                   Course <input type="text" name="course" class="form-control" value="<?php echo $row['course'];?>" id="uppercaseInput" >
                 </div>
                 <div class="col-auto">
-                   Semester <input type="text" name="sem" class="form-control" value="<?php echo $row['semester']?>"> 
+                   Semester <input type="text" name="sem" class="form-control" value="<?php echo $row['semester'];?>"> 
                 </div>
                 <div class="col-auto">
-                       Room  <input type="text" name="roomNo" class="form-control" value="<?php echo $row['RoomNo']?>" id="limit" >
+                       Room  <input type="text" name="roomNo" class="form-control" value="<?php echo $row['RoomNo'];?>" id="limit" >
                 </div>
                 <div class="col-auto">
-                       Accommodated <input type="date" name="acc" class="form-control" value="<?php echo $row['accommodated']?>" id="limit" >
+                       Accommodated <input type="date" name="acc" class="form-control" value="<?php echo $row['accommodated'];?>" id="limit" >
                 </div>
                 <div class="col-auto">
-                      Left <input type="date" name="is_left" class="form-control" value="<?php echo $row['is_left']?>" id="limit" >
+                      Left <input type="date" name="is_left" class="form-control" value="<?php echo $row['is_left'];?>" id="limit" >
                 </div>
                 <center><div class="">
                     <button type="submit" class="btn btn-primary" name="reg_user" value= "Register" style="margin-top:15px">Update</button>     

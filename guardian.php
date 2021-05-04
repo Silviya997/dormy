@@ -8,9 +8,9 @@ if(!isset($_SESSION['user']) && $_SESSION['user'] != 1){
      include_once('header.php');
      include_once('sessionHeader.php');
 
-     $queryCheck = "UPDATE  rooms r LEFT JOIN accdata a ON a.room_id=r.id SET `stateOfroom` = 'free'  WHERE a.room_id IS NULL";
-     $statement = $conn->prepare($queryCheck);
-     $statement->execute();
+    //  $queryCheck = "UPDATE  rooms r LEFT JOIN accdata a ON a.room_id=r.id SET `stateOfroom` = 'free'  WHERE a.room_id IS NULL";
+    //  $statement = $conn->prepare($queryCheck);
+    //  $statement->execute();
      
 if(!isset($_GET['action'])) {
     $query = "SELECT COUNT(*) FROM rooms WHERE stateOfroom = 'outOforder'";
@@ -174,7 +174,7 @@ if(!isset($_GET['action'])) {
                   </div>
                 </div>
                 <div class="align-self-center">
-                <h2 class="h1 mb-0" ><a href="search.php?action=searchStudent" style="color:purple">Search for a student</a></h2 >
+                <h2 class="h1 mb-0" ><a href="search.php?action=searchStudent" style="color:purple">Search for student in dorm</a></h2 >
                 </div>
               </div>
             </div>

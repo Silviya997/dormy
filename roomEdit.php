@@ -13,27 +13,28 @@ session_start();
 	$room = $conn->query($query);
 	$row = $room->fetch(PDO::FETCH_OBJ);
 		$roomNo = $row->roomNo;
-		$status = $row->stateOfroom;
-		if (isset($_POST['pay'])) {
+        $status = $row->stateOfroom;
+		// $status = $row->stateOfroom;
+		if (isset($_POST['update'])) {
             $errors = [];
-			$status = $_POST['status'];
-			if (!empty($status)) {
-				$query2 = "UPDATE rooms SET  `stateOfroom` =:st WHERE id =$editId";
+			$state = $_POST['stateOfroom'];
+            if($state == "select") {
+                echo "You must select month!";
+            } else {
+				$query2 = "UPDATE `rooms` SET  `stateOfroom` =:st WHERE id = $editId" ;
 				$stm = $conn->prepare($query2);
                 $data = [
-                    ':st' => $_POST['status']
+                    ':st' => $state
                 ];
                 $stm->execute($data);
                 if($stm) {
-
+                    echo "bravo";
 		?>
 					<meta http-equiv="refresh" content="0;url='admin.php?action=rooms'"/>
 		<?php
                 }
-            } else {
-                array_push($errors, "All fields are required!");
             }
-        }
+    }
 ?>
     <form action="roomEdit.php?editRoomId=<?php echo $editId;?>" method="POST">
         <section class="editRoom">
@@ -41,14 +42,13 @@ session_start();
                 <h2 class="title">Edit room</h2>
                 <div class="row">
                     <input type="text" name="nomer" class="form-control" style="margin-bottom:10px; background-color:white" value="<?php echo $roomNo; ?>" disabled>
-                    <select class="form-select" name="status" aria-label="Default select example">
-                        <option >Select</option>
+                    <select name="stateOfroom" class="form-select"  aria-label="Default select example">
+                        <option value="select" >Select</option>
                         <option value="free">Free</option>
                         <option value="occupied">Occupied</option>
-                        <option value="out of order">Out of order</option>
+                        <option value="outOforder">Out of order</option>
                     </select>
-                    <button type="submit" class="btn btn-primary" name="pay" value= "submit" style="margin-top:15px">Submit</button>     
-
+                    <button type="submit" class="btn btn-primary" name="update" value= "submit" style="margin-top:15px">Submit</button>     
                 </div>
             </div>
         </select>

@@ -26,7 +26,7 @@
 						$stmCheck = $conn->prepare($querycheck);
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
-						if($row->January == 0000-00-00 ) {
+						if($row->January == 0) {
 							$fee = 80;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
@@ -49,7 +49,7 @@
 						$stmCheck = $conn->prepare($querycheck);
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
-						if($row->February == 0000-00-00 ) {
+						if($row->February == 0 ) {
 							$fee = 80;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
@@ -72,7 +72,7 @@
 						$stmCheck = $conn->prepare($querycheck);
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
-						if($row->March == 0000-00-00 ) {
+						if($row->March == 0 ) {
 							$fee = 80;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
@@ -95,7 +95,7 @@
 						$stmCheck = $conn->prepare($querycheck);
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
-						if($row->April == 0000-00-00 ) {
+						if($row->April == 0 ) {
 							$fee = 80;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
@@ -118,7 +118,7 @@
 						$stmCheck = $conn->prepare($querycheck);
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
-						if($row->May == 0000-00-00 ) {
+						if($row->May == 0 ) {
 							$fee = 80;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
@@ -141,7 +141,7 @@
 						$stmCheck = $conn->prepare($querycheck);
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
-						if($row->June == 0000-00-00 ) {
+						if($row->June == 0 ) {
 							$fee = 80;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
@@ -164,7 +164,7 @@
 						$stmCheck = $conn->prepare($querycheck);
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
-						if($row->July == 0000-00-00 ) {
+						if($row->July == 0 ) {
 							$fee = 80;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
@@ -187,7 +187,7 @@
 						$stmCheck = $conn->prepare($querycheck);
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
-						if($row->August == 0000-00-00 ) {
+						if($row->August == 0 ) {
 							$fee = 80;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
@@ -210,7 +210,7 @@
 						$stmCheck = $conn->prepare($querycheck);
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
-						if($row->September == 0000-00-00 ) {
+						if($row->September == 0 ) {
 							$fee = 80;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
@@ -233,7 +233,7 @@
 						$stmCheck = $conn->prepare($querycheck);
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
-						if($row->October == 0000-00-00 ) {
+						if($row->October == 0 ) {
 							$fee = 80;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
@@ -256,7 +256,7 @@
 						$stmCheck = $conn->prepare($querycheck);
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
-						if($row->November == 0000-00-00 ) {
+						if($row->November == 0 ) {
 							$fee = 80;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
@@ -279,7 +279,7 @@
 						$stmCheck = $conn->prepare($querycheck);
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
-						if($row->December == 0000-00-00 ) {
+						if($row->December == 0 ) {
 							$fee = 80;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
@@ -298,7 +298,37 @@
 						} else {
 							echo "Payment for December has already been made";
 						}
-					}	
+					}		
+					$query = "SELECT * FROM payment p JOIN accdata a ON p.student_id=a.userId WHERE student_id=$ID";
+					$stm=$conn->prepare($query);
+					$stm->execute();
+					$r=$stm->fetch();
+					if($r == true) {
+						$jan = $r['January'];
+						$feb = $r['February'];
+						$march = $r['March'];
+						$april = $r['April'];
+						$may = $r['May'];
+						$june = $r['June'];
+						$july = $r['July'];
+						$aug = $r['August'];
+						$sep = $r['September'];
+						$oct = $r['October'];
+						$nov = $r['November'];
+						$dec = $r['December'];
+						$Left= $r['is_left'];
+						$date = date('Y-m-d');
+						if ($jan != '0' && $feb != '0' && $march != '0' && $april != '0' && $may != '0' && $june != '0' && $july != '0' && 
+						$aug != '0' && $sep != '0' && $oct != '0' && $nov != '0' && $dec != '0') {
+						
+						$q ="UPDATE `payment` SET `paid`= 0 WHERE student_id = $ID";
+						
+						$s = $conn->prepare($q);
+						$s->execute();
+
+						
+						}
+				}
 				}
 			} else {
 				echo "No room has been assigned to this faculty number.";

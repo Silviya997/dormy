@@ -38,13 +38,7 @@ include_once('sessionHeader.php');
 	</section>
 
 </form>
-		
-<!-- You need to select the fields from the interest table if you want to see them. Here I am selecting all the fields with interest.*.
 
-SELECT user.FirstName, user.LastName, user.Profilepix, userinterest.UserId, userinterest.InterestId, interest.*
-FROM user 
-INNER JOIN userinterest ON user.UserId = userinterest.UserId 
-INNER JOIN interest ON userinterest.InterestId = interest.InterestId -->
 <section class="res_section">
 <div class="container">
 <?php
@@ -64,6 +58,14 @@ INNER JOIN interest ON userinterest.InterestId = interest.InterestId -->
 			if ($serachstm->rowCount() > 0) {
 ?>
 <h2 class="title">Results</h2>
+<div class="klas">
+<div class="square1"></div>
+<small>In dorm and has NO debts</small> 
+<div class="square2"></div>
+<small>Expired period of stay and has NO debts</small> 
+<div class="square3"></div>
+<small>Expired period of stay and HAS debts</small>
+</div>
 <div class="table-responsive-sm">
 <table class="table">
 	<thead class="table-light">
@@ -74,6 +76,8 @@ INNER JOIN interest ON userinterest.InterestId = interest.InterestId -->
                         <th scope="col">PINs</th>
                         <th scope="col">Fak No</th>
                         <th scope="col">Room</th>
+						<th scope="col">Accommodated</th>
+						<th scope="col">Left</th>
                         <th scope="col">January</th>
                         <th scope="col">February</th>
                         <th scope="col">March</th>
@@ -93,26 +97,39 @@ INNER JOIN interest ON userinterest.InterestId = interest.InterestId -->
        while ($row = $serachstm->fetch()) {
 
 								$id=$row['id']; 
+								$paid = $row['paid'];
+								$acc = date('Y-m-d');
+								if($row['is_left'] <= $acc && $paid == '1') {
+									$tdStyle='background-color:red;';
+
+								} elseif($row['is_left'] <= $acc && $paid == '0') {
+									$tdStyle='background-color:lightblue;';
+
+								} else {
+									$tdStyle='background-color:lightgreen;';
+								}
                         ?>
 							<tr>
-							<td> <?php echo $row['f_name'];?></td>
-							<td> <?php echo $row['m_name'];?></td>
-							<td> <?php echo $row['l_name'];?></td>
-							<td> <?php echo $row['egn'];?></td>
-							<td> <?php echo $row['fakNo'];?></td>
-							<td> <?php echo $row['RoomNo'];?></td>
-							<td> <?php echo $row['January'];?></td>
-							<td > <?php echo $row['February'];?></td>
-							<td> <?php echo $row['March'];?></td>
-							<td> <?php echo $row['April'];?></td>
-							<td > <?php echo $row['May'];?></td>
-							<td> <?php echo $row['June'];?></td>
-							<td> <?php echo $row['July'];?></td>
-                            <td> <?php echo $row['August'];?></td>
-							<td> <?php echo $row['September'];?></td>
-							<td> <?php echo $row['October'];?></td>
-							<td> <?php echo $row['November'];?></td>
-							<td> <?php echo $row['December'];?></td>
+							<td style=<?php echo $tdStyle; ?>> <?php echo $row['f_name'];?></td>
+							<td style=<?php echo $tdStyle; ?>> <?php echo $row['m_name'];?></td>
+							<td style=<?php echo $tdStyle; ?>> <?php echo $row['l_name'];?></td>
+							<td style=<?php echo $tdStyle; ?>> <?php echo $row['egn'];?></td>
+							<td style=<?php echo $tdStyle; ?>> <?php echo $row['fakNo'];?></td>
+							<td style=<?php echo $tdStyle; ?>> <?php echo $row['RoomNo'];?></td>
+							<td style=<?php echo $tdStyle; ?>> <?php echo $row['accommodated'];?></td>
+							<td style=<?php echo $tdStyle; ?>> <?php echo $row['is_left'];?></td>
+							<td style=<?php echo $tdStyle; ?>> <?php echo $row['January'];?></td>
+							<td style=<?php echo $tdStyle; ?> > <?php echo $row['February'];?></td>
+							<td style=<?php echo $tdStyle; ?>> <?php echo $row['March'];?></td>
+							<td style=<?php echo $tdStyle; ?>> <?php echo $row['April'];?></td>
+							<td style=<?php echo $tdStyle; ?> > <?php echo $row['May'];?></td>
+							<td style=<?php echo $tdStyle; ?>> <?php echo $row['June'];?></td>
+							<td style=<?php echo $tdStyle; ?>> <?php echo $row['July'];?></td>
+                            <td style=<?php echo $tdStyle; ?>> <?php echo $row['August'];?></td>
+							<td style=<?php echo $tdStyle; ?>> <?php echo $row['September'];?></td>
+							<td style=<?php echo $tdStyle; ?>> <?php echo $row['October'];?></td>
+							<td style=<?php echo $tdStyle; ?>> <?php echo $row['November'];?></td>
+							<td style=<?php echo $tdStyle; ?>> <?php echo $row['December'];?></td>
 							</tr>
 						<?php
                     }
