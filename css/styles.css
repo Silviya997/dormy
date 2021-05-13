@@ -172,7 +172,7 @@ a {
 .homesection, .Addroom, .Searchroom, .addstudent  {
     margin-top: 5rem;
 }
-.mail, .contact, .search_sec{
+.mail, .contact, .search_sec, .updatePass {
     margin: 5rem;
 }
 .editRoom {

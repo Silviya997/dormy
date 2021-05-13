@@ -77,10 +77,11 @@
 							<td> <?php echo $row['roomNo'];?></td>
 							<td> <?php echo $row['stateOfroom'];?></td>
                             <?php
-                            if(isset($_SESSION['user']) && $_SESSION['user'] == 1) { ?>
-                            <td><button type="button" name="add" onclick="location.href='data.php?action=addData'">Edit</button> </td>
+                            if($row['stateOfroom'] == 'free') {
+                                ?>
+                            <td><button type="button" name="add" onclick="location.href='addData.php?roomId=<?php echo $row['id'];?>'">Edit</button> </td>
                             <?php
-                            }
+                          }
                             ?>
                         </thead>
                     </table>

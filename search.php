@@ -23,7 +23,6 @@ include_once('sessionHeader.php');
 							<option value="egn">By PINs</option>
 							<option value="university">By University</option>
 							<option value="course">By Course</option>
-							<option value="semester">By Semester</option>
 						</select>
 					</label>
 					</div>
@@ -49,13 +48,16 @@ include_once('sessionHeader.php');
 <div class="container">
 <?php
 	if(isset($_POST['search'])) {
+		
+		$errors = [];
 		$column = $_POST['column'];
 		if($column == "select") {
-			echo "You must select type of search!";
+			array_push($errors,"You must select type of search!");
 		} else {
 			$key_word = $_POST['key_word'];
-			$searchquery = "SELECT * FROM user u INNER JOIN accdata a ON u.id=a.userId INNER JOIN payment p ON a.userId=p.student_id  
-			WHERE ".$column." LIKE :search_word";
+			$searchquery = "SELECT * FROM user u INNER JOIN accdata a ON u.id=a.userId INNER JOIN payment p ON p.accdata_id=a.data_id
+			WHERE ".$column." LIKE :search_word"; 
+			
 			$serachstm = $conn->prepare($searchquery);
 			$searchdata = [
 			':search_word' => '%'.$key_word.'%'
@@ -85,24 +87,28 @@ include_once('sessionHeader.php');
                         <th scope="col">Email</th>
                         <th scope="col">University</th>
                         <th scope="col">Course</th>
-                        <th scope="col">Semester</th>
 						<th scope="col">Accommodated</th>
                         <th scope="col">Left</th>
                         <th scope="col">Room No</th>
+						<th scope="col">Stay</th>
 						<th scope="col">Payment</th>
 						</tr>
 						</thead>
 						<tbody>
 						<?php
-       					while ($row = $serachstm->fetch()) {
+       					while ($row = $serachstm->fetch(PDO::FETCH_ASSOC)) {
+							$id=$row['id']; 
 
-								$id=$row['id']; 
+								$extended = $row['toExtend'];
+
 								$paid = $row['paid'];
 								$acc = date('Y-m-d');
-								if($row['is_left'] <= $acc && $paid == '1') {
-									$tdStyle='background-color:red;';
 
-								} elseif($row['is_left'] <= $acc && $paid == '0') {
+
+								if($row['is_left'] <= $acc && $paid == '1') {
+									$tdStyle='background-color:red;'; 
+
+								} elseif($row['is_left'] <= $acc && $paid == '0' ) {
 									$tdStyle='background-color:lightblue;';
 
 								} else {
@@ -119,10 +125,10 @@ include_once('sessionHeader.php');
 							<td style=<?php echo $tdStyle; ?>> <?php echo $row['email'];?></td>
 							<td style=<?php echo $tdStyle; ?>> <?php echo $row['university'];?></td>
 							<td style=<?php echo $tdStyle; ?>> <?php echo $row['course'];?></td>
-							<td style=<?php echo $tdStyle; ?>> <?php echo $row['semester'];?></td>
 							<td style=<?php echo $tdStyle; ?>> <?php echo $row['accommodated'];?></td>
 							<td style=<?php echo $tdStyle; ?>> <?php echo $row['is_left'];?></td>
 							<td style=<?php echo $tdStyle; ?>> <?php echo $row['RoomNo'];?></td>
+							<td style=<?php echo $tdStyle; ?>> <?php echo $extended;?></td>
 							<?php
 							if($row['is_left'] <= $acc && $paid == '1') {
 								?>
@@ -130,28 +136,33 @@ include_once('sessionHeader.php');
 
 								<?php
 
-							} elseif($row['is_left'] <= $acc && $paid == '0') {
+							} elseif($row['is_left'] <= $acc && $paid == '0' && $extended == 'notExtended') {
 								?>
 								<td style=<?php echo $tdStyle; ?>>All paid</td>
-	
+								<td><button type="button" name="extend" onclick="location.href='extendStay.php?studentId=<?php echo $row['id'];?>'">Extend</button> </td>
+
 									<?php
 							} else {
 								?>
 								<td style=<?php echo $tdStyle; ?>>OK</td>
 								<?php
 								}
-							if(isset($_SESSION['user']) && $_SESSION['user'] == 2) { ?>
-							<td><button type="button" name="edit" onclick="location.href='editUser.php?editId=<?php echo $row['id'];?>'">Edit</button> </td>
+								
+							if(isset($_SESSION['user']) && $_SESSION['user'] == 2 && $extended == 'notExtended') { ?>
+							<td><button type="button"  name="edit" onclick="location.href='editUser.php?editId=<?php echo $row['id'];?>'">Edit</button> </td>
 							<?php } ?>
 						</tr>
 						<?php
+						   
                     }
 					?>
 					</tbody>
 					</table>
 					<?php
                    
-                } 
+                } else {
+					array_push($errors, "No results. Try again");
+				}
 			
 			}
 	}
@@ -162,12 +173,11 @@ include_once('sessionHeader.php');
 </section>
 
 <?php
+if(!empty($errors)) {
+	include_once('errors.php');
+}
 	include_once('footer.php');
 ?>
-
-
-
-
 
 
 

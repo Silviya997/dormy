@@ -5,28 +5,25 @@
     include_once('header.php');
     include_once('sessionHeader.php');
 
+    $studId= $_GET['Id'];
+    $queryy = "SELECT * FROM user u INNER JOIN accdata a ON u.id=a.userId  WHERE id = :id";
+    $dataa = [
+    ':id' => $studId
+    ];
+    $stt = $conn->prepare($queryy);
+    $stt->execute($dataa);
+    $row=$stt->fetch();
+    $FAKnO = $row['fakNo'];
 
 	if(isset($_POST['pay'])) {
 		$errors = [];
-		if(!empty($_POST['fakNo'])) {
-			$query1 = "SELECT * FROM user u INNER JOIN accdata a ON u.id=a.userId  WHERE u.fakNo=:FakNo AND a.toExtend = :exd";
-			$data = [
-			':FakNo' => $_POST['fakNo'],
-			':exd' => 'notExtended'
-			];
-			$statement1 = $conn->prepare($query1);
-			$statement1->execute($data);
-			$result1 = $statement1->fetch();
-			// var_dump($result1);exit;
-			if ($statement1->rowCount() > 0) {
-				$ID = $result1['id'];
-				// var_dump($ID);exit;
+		
 				$select = $_POST['monthSelect'];
 				if($select == "select") {
 					echo "You must select month!";
 				} else {	
 					if($select == 'January') {
-						$querycheck ="SELECT * FROM payment WHERE student_id=$ID AND paid=1";
+						$querycheck ="SELECT * FROM payment WHERE student_id=$studId AND paid=1";
 						$stmCheck = $conn->prepare($querycheck);
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
@@ -36,7 +33,7 @@
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
 
-							$payUpdate = "UPDATE `payment` SET `January`=:mesec, `date1`=:den WHERE student_id = $ID AND paid=1";
+							$payUpdate = "UPDATE `payment` SET `January`=:mesec, `date1`=:den WHERE student_id = $studId AND paid=1";
 							$dataUp = [
 								':mesec' => $sum,
 								':den' => $date
@@ -45,11 +42,11 @@
 							$paySt->execute($dataUp);
 							echo "Successfully added payment!";	
 						} else {
-							echo "Payment for January has already been made";
+							array_push($errors, "Payment for January has already been made" ) ;
 						}
 					}
 					if($select == 'February') {
-						$querycheck ="SELECT * FROM payment WHERE student_id=$ID AND paid=1";
+						$querycheck ="SELECT * FROM payment WHERE student_id=$studId AND paid=1";
 						$stmCheck = $conn->prepare($querycheck);
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
@@ -59,7 +56,7 @@
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
 
-							$payUpdate = "UPDATE `payment` SET `February`=:mesec, `date2`=:den WHERE student_id = $ID AND paid=1";
+							$payUpdate = "UPDATE `payment` SET `February`=:mesec, `date2`=:den WHERE student_id = $studId AND paid=1";
 							$dataUp = [
 								':mesec' => $sum,
 								':den' => $date
@@ -72,7 +69,7 @@
 						}
 					}
 					if($select == 'March') {
-						$querycheck ="SELECT * FROM payment WHERE student_id=$ID AND paid=1";
+						$querycheck ="SELECT * FROM payment WHERE student_id=$studId AND paid=1";
 						$stmCheck = $conn->prepare($querycheck);
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
@@ -82,7 +79,7 @@
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
 
-							$payUpdate = "UPDATE `payment` SET `March`=:mesec, `date3`=:den WHERE student_id = $ID AND paid=1";
+							$payUpdate = "UPDATE `payment` SET `March`=:mesec, `date3`=:den WHERE student_id = $studId AND paid=1";
 							$dataUp = [
 								':mesec' => $sum,
 								':den' => $date
@@ -95,7 +92,7 @@
 						}
 					}
 					if($select == 'April') {
-						$querycheck ="SELECT * FROM payment WHERE student_id=$ID AND paid=1";
+						$querycheck ="SELECT * FROM payment WHERE student_id=$studId AND paid=1";
 						$stmCheck = $conn->prepare($querycheck);
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
@@ -105,7 +102,7 @@
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
 
-							$payUpdate = "UPDATE `payment` SET `April`=:mesec, `date4`=:den WHERE student_id = $ID AND paid=1";
+							$payUpdate = "UPDATE `payment` SET `April`=:mesec, `date4`=:den WHERE student_id = $studId AND paid=1";
 							$dataUp = [
 								':mesec' => $sum,
 								':den' => $date
@@ -118,7 +115,7 @@
 						}
 					}
 					if($select == 'May') {
-						$querycheck ="SELECT * FROM payment WHERE student_id=$ID AND paid=1";
+						$querycheck ="SELECT * FROM payment WHERE student_id=$studId AND paid=1";
 						$stmCheck = $conn->prepare($querycheck);
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
@@ -128,7 +125,7 @@
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
 
-							$payUpdate = "UPDATE `payment` SET `May`=:mesec, `date5`=:den WHERE student_id = $ID AND paid=1";
+							$payUpdate = "UPDATE `payment` SET `May`=:mesec, `date5`=:den WHERE student_id = $studId AND paid=1";
 							$dataUp = [
 								':mesec' => $sum,
 								':den' => $date
@@ -141,7 +138,7 @@
 						}
 					}
 					if($select == 'June') {
-						$querycheck ="SELECT * FROM payment WHERE student_id=$ID AND paid=1";
+						$querycheck ="SELECT * FROM payment WHERE student_id=$studId AND paid=1";
 						$stmCheck = $conn->prepare($querycheck);
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
@@ -151,7 +148,7 @@
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
 
-							$payUpdate = "UPDATE `payment` SET `June`=:mesec, `date6`=:den WHERE student_id = $ID AND paid=1";
+							$payUpdate = "UPDATE `payment` SET `June`=:mesec, `date6`=:den WHERE student_id = $studId AND paid=1";
 							$dataUp = [
 								':mesec' => $sum,
 								':den' => $date
@@ -164,7 +161,7 @@
 						}
 					}
 					if($select == 'July') {
-						$querycheck ="SELECT * FROM payment WHERE student_id=$ID AND paid=1";
+						$querycheck ="SELECT * FROM payment WHERE student_id=$studId AND paid=1";
 						$stmCheck = $conn->prepare($querycheck);
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
@@ -174,7 +171,7 @@
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
 
-							$payUpdate = "UPDATE `payment` SET `July`=:mesec, `date7`=:den WHERE student_id = $ID AND paid=1";
+							$payUpdate = "UPDATE `payment` SET `July`=:mesec, `date7`=:den WHERE student_id = $studId AND paid=1";
 							$dataUp = [
 								':mesec' => $sum,
 								':den' => $date
@@ -187,7 +184,7 @@
 						}
 					}
 					if($select == 'August') {
-						$querycheck ="SELECT * FROM payment WHERE student_id=$ID AND paid=1";
+						$querycheck ="SELECT * FROM payment WHERE student_id=$studId AND paid=1";
 						$stmCheck = $conn->prepare($querycheck);
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
@@ -197,7 +194,7 @@
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
 
-							$payUpdate = "UPDATE `payment` SET `August`=:mesec, `date8`=:den WHERE student_id = $ID AND paid=1";
+							$payUpdate = "UPDATE `payment` SET `August`=:mesec, `date8`=:den WHERE student_id = $studId AND paid=1";
 							$dataUp = [
 								':mesec' => $sum,
 								':den' => $date
@@ -210,7 +207,7 @@
 						}
 					}
 					if($select == 'September') {
-						$querycheck ="SELECT * FROM payment WHERE student_id=$ID AND paid=1";
+						$querycheck ="SELECT * FROM payment WHERE student_id=$studId AND paid=1";
 						$stmCheck = $conn->prepare($querycheck);
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
@@ -220,7 +217,7 @@
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
 
-							$payUpdate = "UPDATE `payment` SET `September`=:mesec, `date9`=:den WHERE student_id = $ID AND paid=1";
+							$payUpdate = "UPDATE `payment` SET `September`=:mesec, `date9`=:den WHERE student_id = $studId AND paid=1";
 							$dataUp = [
 								':mesec' => $sum,
 								':den' => $date
@@ -233,7 +230,7 @@
 						}
 					}
 					if($select == 'October') {
-						$querycheck ="SELECT * FROM payment WHERE student_id=$ID AND paid=1";
+						$querycheck ="SELECT * FROM payment WHERE student_id=$studId AND paid=1";
 						$stmCheck = $conn->prepare($querycheck);
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
@@ -243,7 +240,7 @@
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
 
-							$payUpdate = "UPDATE `payment` SET `October`=:mesec, `date10`=:den WHERE student_id = $ID AND paid=1";
+							$payUpdate = "UPDATE `payment` SET `October`=:mesec, `date10`=:den WHERE student_id = $studId AND paid=1";
 							$dataUp = [
 								':mesec' => $sum,
 								':den' => $date
@@ -256,7 +253,7 @@
 						}
 					}
 					if($select == 'November') {
-						$querycheck ="SELECT * FROM payment WHERE student_id=$ID AND paid=1";
+						$querycheck ="SELECT * FROM payment WHERE student_id=$studId AND paid=1";
 						$stmCheck = $conn->prepare($querycheck);
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
@@ -266,7 +263,7 @@
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
 
-							$payUpdate = "UPDATE `payment` SET `November`=:mesec, `date11`=:den WHERE student_id = $ID AND paid=1";
+							$payUpdate = "UPDATE `payment` SET `November`=:mesec, `date11`=:den WHERE student_id = $studId AND paid=1";
 							$dataUp = [
 								':mesec' => $sum,
 								':den' => $date
@@ -279,7 +276,7 @@
 						}
 					}
 					if($select == 'December') {
-						$querycheck ="SELECT * FROM payment WHERE student_id=$ID AND paid=1";
+						$querycheck ="SELECT * FROM payment WHERE student_id=$studId AND paid=1";
 						$stmCheck = $conn->prepare($querycheck);
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
@@ -289,7 +286,7 @@
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
 
-							$payUpdate = "UPDATE `payment` SET `December`=:mesec, `date12`=:den WHERE student_id = $ID AND paid=1";
+							$payUpdate = "UPDATE `payment` SET `December`=:mesec, `date12`=:den WHERE student_id = $studId AND paid=1";
 							$dataUp = [
 								':mesec' => $sum,
 								':den' => $date
@@ -303,7 +300,7 @@
 							echo "Payment for December has already been made";
 						}
 					}		
-					$query = "SELECT * FROM payment p INNER JOIN accdata a ON p.student_id=a.userId WHERE student_id=$ID";
+					$query = "SELECT * FROM payment p INNER JOIN accdata a ON p.student_id=a.userId WHERE student_id=$studId";
 					$stm=$conn->prepare($query);
 					$stm->execute();
 					$r=$stm->fetch();
@@ -326,33 +323,32 @@
 						if ($jan != '0' && $feb != '0' && $march != '0' && $april != '0' && $may != '0' && $june != '0' && $july != '0' && 
 						$aug != '0' && $sep != '0' && $oct != '0' && $nov != '0' && $dec != '0' && $paidd== '1') {
 						
-						$q ="UPDATE `payment` SET `paid`= 0 WHERE student_id = $ID ";
+						$q ="UPDATE `payment` SET `paid`= 0 WHERE student_id = $studId ";
 						
 						$s = $conn->prepare($q);
 						$s->execute();
 
 						
 						}
+				    }
 				}
-				}
-			} else {
-				echo "No room has been assigned to this faculty number.";
-			}
-		} else {
-			echo "Faculty No is required!";
-		}
 	}	
 
 ?>
-<form action="payment.php?action=stud_payment" method="POST">
+<form action="addPay.php?Id=<?php echo $row['id'];?>" method="POST">
 	<section class="homesection">
 		<div class="container">
 			<div class="row">
 				<div class="col-md-2"></div>
 				<div class="col-md-8">
 				<div class="input-group mb-3">
+                <?php 
+                    if(!empty($errors)) {
+                        include_once('errors.php');
+                    }
+                ?>
 					<span class="input-group-text" id="basic-addon3" style="margin-top:10px">Enter students Faculty No</span>
-					<input type="text" name="fakNo" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+					<input type="text" name="fakNo" value=<?php echo $FAKnO; ?> class="form-control" id="basic-url" aria-describedby="basic-addon3" disabled>
 				</div>
 				<div class="form-floating">
 					<select name="monthSelect" class="form-select" id="floatingSelect" aria-label="Floating label select example">

@@ -44,7 +44,6 @@
                         <th scope="col">Email</th>
                         <th scope="col">University</th>
                         <th scope="col">Course</th>
-                        <th scope="col">Semester</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -63,7 +62,6 @@
                         <td> <?php echo $row->email;?></td>
                         <td > <?php echo $row->university;?></td>
                         <td> <?php echo $row->course;?></td>
-                        <td> <?php echo $row->semester;?></td>
                     </tr>
                 <?php
                     }
@@ -93,9 +91,6 @@
                         <input type="text"  name="course" class="form-control" placeholder="Course" id="uppercaseInput">
                     </div>
                     <div class="col-auto">
-                        <input type="text" name="sem" class="form-control" placeholder="Semester"> 
-                    </div>
-                    <div class="col-auto">
                         <input type="submit" name="add" class="btn btn-primary"> 
                     </div>
                 </div>
@@ -108,7 +103,6 @@
                         $fn = filter_input(INPUT_POST, 'fakNo', FILTER_SANITIZE_STRING);
                         $uni = strtoupper(filter_input(INPUT_POST, 'uni', FILTER_SANITIZE_STRING));
                         $course = strtoupper(filter_input(INPUT_POST, 'course', FILTER_SANITIZE_STRING));
-                        $sem = filter_input(INPUT_POST, 'sem', FILTER_SANITIZE_STRING);
 
                             if (!empty($fn)) { 
                                 if(!preg_match('/^[0-9]*$/', $fn)){ 
@@ -144,18 +138,12 @@
                                 array_push($errors, "Course->Only letters and white space allowed" ) ;
                               }
                         }
-                        if (empty($sem)) { 
-                            array_push($errors, "Semester is required"); 
-                        }
-                        if(!empty($sem)) {
-                            if(!preg_match('/^[0-9]*$/', $sem)){ 
-                                array_push($errors, "Semester->Only digits and white space allowed");
-                            }
-                        }
+                        
+                       
                         if (empty($errors)) {
                     
                       
-                            $queryadd = "UPDATE `user` SET `fakNo`=:f, `university`=:u, `course`=:c, `semester`=:s WHERE id = $id"; 
+                            $queryadd = "UPDATE `user` SET `fakNo`=:f, `university`=:u, `course`=:c WHERE id = $id"; 
     
                             $statementadd = $conn->prepare($queryadd);
     
@@ -163,7 +151,6 @@
                                 ':f' => $_POST['fakNo'],
                                 ':u' => strtoupper($_POST['uni']),
                                 ':c' => strtoupper($_POST['course']),
-                                ':s' => $_POST['sem'],
                             ];
                             $add = $statementadd->execute($dataadd); 
                             if ($add) {

@@ -18,7 +18,6 @@ include_once('sessionHeader.php');
             $fn = filter_input(INPUT_POST, 'fakNo', FILTER_SANITIZE_STRING);
             $uni = strtoupper(filter_input(INPUT_POST, 'uni', FILTER_SANITIZE_STRING));
             $course = strtoupper(filter_input(INPUT_POST, 'course', FILTER_SANITIZE_STRING));
-            $sem = filter_input(INPUT_POST, 'sem', FILTER_SANITIZE_STRING);
 
             if (empty($first_name)) { 
                 array_push($errors, "First name is required"); 
@@ -51,11 +50,8 @@ include_once('sessionHeader.php');
                     array_push($errors, "Cours->Only letters and white space allowed" ) ;
                   }
             }
-            if(!empty($sem)) {
-                if(!preg_match('/^[0-9]*$/', $sem)){ 
-                    array_push($errors, "Semester->Only digits and white space allowed");
-                }
-            }
+          
+
             if (!empty($egn)) { 
                 if(!preg_match('/^[0-9]*$/', $egn)){ 
                     array_push($errors, "EGN is invalid");
@@ -150,8 +146,8 @@ include_once('sessionHeader.php');
                 $password_1 = md5($salt . $_POST['password_1']);
             
 
-                $query = "INSERT INTO  `user` (f_name, m_name, l_name, egn, email, username, pass1,	phone, salt, fakNo, university, course, semester)
-                VALUES (:FN, :MN, :LN, :EGN, :MAIL, :UN, :PAS1, :PHONE, :SALT, :f, :u, :c, :s)";
+                $query = "INSERT INTO  `user` (f_name, m_name, l_name, egn, email, username, pass1,	phone, salt, fakNo, university, course)
+                VALUES (:FN, :MN, :LN, :EGN, :MAIL, :UN, :PAS1, :PHONE, :SALT, :f, :u, :c)";
                 
                 $statement = $conn->prepare($query);
 
@@ -168,7 +164,6 @@ include_once('sessionHeader.php');
                     ':f' => $_POST['fakNo'],
                     ':u' => strtoupper($_POST['uni']),
                     ':c' => strtoupper($_POST['course']),
-                    ':s' => $_POST['sem'],
                 ];
                 $result = $statement->execute($data); 
 
@@ -199,7 +194,7 @@ include_once('sessionHeader.php');
                     <input type="text" name="mid_name" class="form-control" placeholder="Middle name">
                 </div>
                 <div class="col-auto">
-                    <input type="text" name="l_name" class="form-control" placeholder="Last name">
+                    <input type="text" name="l_name" class="form-control" placeholder="Last name" style="text-transform:capitalize;">
                 </div>
                 <div class="col-auto">
                     <input type="" name="egn" class="form-control" placeholder="PINs">
@@ -236,9 +231,7 @@ include_once('sessionHeader.php');
                 <div class="col-auto">
                     <input type="text" name="course" class="form-control" placeholder="Course" id="uppercaseInput" >
                 </div>
-                <div class="col-auto">
-                    <input type="text" name="sem" class="form-control" placeholder="Semester"> 
-                </div>
+               
                 <div class="col-auto">
                     <button type="submit" class="btn btn-primary" name="reg_user" value= "Register" style="margin-top:15px" >Register</button>     
                 </div>

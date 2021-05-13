@@ -74,21 +74,20 @@
     }
     
 ?>
-<div>
+
     <form action="index.php?action=newpass" method="POST">
-        <section class="main_section">
+        <section class="updatePass">
         <div class="container">
             <div class="row">
                 <div class="col-md-3"></div>
                 <div class="col-md-6">
-                    <h3 >CHANGE PASSWORD</h3>
+                    <h3 class="title">CHANGE PASSWORD</h3><br>
                     <?php
                     include_once('errors.php');
                     ?>
-                    Current Password:<br>
+                    Current Password:
                     <input type="text" name="currentPassword" class="form-control">
-                    <br>
-                    New Password:<br>
+                    New Password:
                     <input type="password" name="newPassword" id="psw" class="form-control" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" required>
                     <div id="message">
                         <h6>Password must contain the following:</h6>
@@ -97,17 +96,19 @@
                         <small id="number" class="invalid">A <b>number</b></small>
                         <small id="length" class="invalid">Minimum <b>8 characters</b></small>
                     </div>
-                    <br>
-                    Confirm Password:<br>
+                    
+                    Confirm Password:
                     <input type="password" name="confirmPassword" class="form-control">
-                    <br><br>
-                    <input type="submit" name="change">
+                    <br>
+                    <input type="submit" class="btn btn-primary" name="change">
                 </div>    
             </div>    
         </div>
         </section>
     </form>
-</div>
+<?php
+include_once('footer.php');
+?>
 <script>
 var myInput = document.getElementById("psw");
 var letter = document.getElementById("letter");

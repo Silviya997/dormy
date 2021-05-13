@@ -48,27 +48,27 @@ include_once('sessionHeader.php');
 			echo "You must select type of search!";
 		} else {
 			$key_word = $_POST['key_word'];
-			$searchquery = "SELECT * FROM user u INNER JOIN accdata a ON u.id=a.userId INNER JOIN payment p ON a.userId=p.student_id
-             WHERE ".$column." LIKE :search_word";
+			$searchquery = "SELECT * FROM user u INNER JOIN accdata a ON u.id=a.userId INNER JOIN payment p ON p.accdata_id=a.data_id
+             WHERE ".$column." LIKE :search_word"; 
 			$serachstm = $conn->prepare($searchquery);
 			$searchdata = [
 			':search_word' => '%'.$key_word.'%'
 			];
 			$serachstm->execute($searchdata);
 			if ($serachstm->rowCount() > 0) {
-?>
-<h2 class="title">Results</h2>
-<div class="klas">
-<div class="square1"></div>
-<small>In dorm and has NO debts</small> 
-<div class="square2"></div>
-<small>Expired period of stay and has NO debts</small> 
-<div class="square3"></div>
-<small>Expired period of stay and HAS debts</small>
-</div>
-<div class="table-responsive-sm">
-<table class="table">
-	<thead class="table-light">
+?>			
+				<h2 class="title">Results</h2>
+				<div class="klas">
+				<div class="square1"></div>
+				<small>In dorm and has NO debts</small> 
+				<div class="square2"></div>
+				<small>Expired period of stay and has NO debts</small> 
+				<div class="square3"></div>
+				<small>Expired period of stay and HAS debts</small>
+				</div>
+				<div class="table-responsive-sm">
+				<table class="table">
+					<thead class="table-light">
 						<tr>
 						<th scope="col">First name</th>
                         <th scope="col">Middle name</th>
@@ -94,8 +94,7 @@ include_once('sessionHeader.php');
 						</thead>
 						<tbody>
 						<?php
-       while ($row = $serachstm->fetch()) {
-
+       					while ($row = $serachstm->fetch()) {
 								$id=$row['id']; 
 								$paid = $row['paid'];
 								$acc = date('Y-m-d');
@@ -130,10 +129,26 @@ include_once('sessionHeader.php');
 							<td style=<?php echo $tdStyle; ?>> <?php echo $row['October'];?></td>
 							<td style=<?php echo $tdStyle; ?>> <?php echo $row['November'];?></td>
 							<td style=<?php echo $tdStyle; ?>> <?php echo $row['December'];?></td>
+							<?php
+								if($row['is_left'] <= $acc && $paid == '1') {
+							?>
+								<td><button type="button"  name="edit" onclick="location.href='addPay.php?Id=<?php echo $row['id'];?>'">Edit</button> </td>
+							<?php
+
+							} elseif($row['is_left'] <= $acc && $paid == '0') {
+
+							} else {
+							?>
+								<td><button type="button"  name="edit" onclick="location.href='addPay.php?Id=<?php echo $row['id'];?>'">Edit</button> </td>
+							<?php
+							}
+							?>
+
 							</tr>
 						<?php
                     }
 					?>
+					
 					</tbody>
 					</table>
 					<?php

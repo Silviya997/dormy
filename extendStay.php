@@ -5,34 +5,35 @@ require_once('conn.php');
 include_once('header.php');
 include_once('sessionHeader.php');
 
+$studentId=$_GET['studentId'];
 
 $acc= date('Y-m-d');
 $left = date('Y-m-d', strtotime("+12 months", strtotime($acc)));
 
 $errors = [];
 
+$editQuery = "SELECT * FROM user WHERE id=:id";
+$editStm = $conn->prepare($editQuery);
+$editData = [
+':id' => $studentId
+];
+$editStm->execute($editData);
+$row=$editStm->fetch();
+// var_dump($row);exit;
+$q="SELECT data_id FROM accdata  WHERE userId = $studentId AND toExtend = 'notExtended'";
+                        $ss=$conn->prepare($q);
+                        $ss->execute();
+                        $r=$ss->fetch();
+                        $data_id = $r['data_id'];
+                        // var_dump($data_id);exit;
 
 if (isset($_POST['add_room'])) {
     $errors = [];
+    $roomNo = $_POST['roomNo'];
 
-    if (empty($_POST['fakNo'])) {
-        array_push($errors, 'Enter faculty number!');
-    } 
     if (empty($_POST['roomNo'])) {
         array_push($errors, 'Enter room number!');
-    }
-    if (!empty($_POST['fakNo']) && !empty($_POST['roomNo'])) {
-    $qAcount = "SELECT * FROM `user` WHERE `fakNo`=:FakNo";
-    $data = [
-    ':FakNo' => $_POST['fakNo']
-    ];
-    $statement = $conn->prepare($qAcount);
-    $statement->execute($data);
-    $result = $statement->fetch();
-
-    if ($statement->rowCount() > 0) {
-        $ID = $result['id'];
-        $roomNo = $_POST['roomNo'];
+    } else {
         $queryy = "SELECT * FROM rooms WHERE roomNo = :nomer";
         $dataa = [
         ':nomer' => $_POST['roomNo']
@@ -40,27 +41,14 @@ if (isset($_POST['add_room'])) {
         $stt = $conn->prepare($queryy);
         $stt->execute($dataa);
         $rez=$stt->fetch();
-        // var_dump($rez);exit;
         if($stt->rowCount() == 1) {
             $roomId = $rez['id'];
             $stateOfroom = $rez['stateOfroom'];
             if($stateOfroom != 'outOforder') {
                 if($stateOfroom == 'free') {
-                $check= "SELECT * FROM user u INNER JOIN accdata a ON u.id=a.userId WHERE u.id = :ID ";
-                $d = [
-                ':ID' => $ID
-                // ':staq' => $roomNo
-                ];
-                $stm = $conn->prepare($check);
-                $stm->execute($d);
-                $r=$stm->fetch();
-                if($stm->rowCount() > 0) {
-                    array_push($errors, 'Faculty No already exist in database .');  ?> <div class="row" style="margin-top:1rem"><center><a href="search.php?action=search">Search for a student</a></div></center> <?php 
-
-                } else {
                     $query = "INSERT INTO accdata (userId, accommodated, is_left, RoomNo, room_id) VALUES (:id, :acc, :isleft, :room, :roomId)";
                     $Data = [
-                    ':id' => $ID,
+                    ':id' => $studentId,
                     ':acc' => $acc,
                     ':isleft' => $left,
                     ':room' => $roomNo,
@@ -69,6 +57,7 @@ if (isset($_POST['add_room'])) {
                     $stmt = $conn->prepare($query);
                     $res = $stmt->execute($Data);
                     if ($res) {
+                        
                         $query1 = "SELECT * FROM rooms WHERE roomNo = :nomer";
                         $danni = [
                         ':nomer' => $roomNo
@@ -78,49 +67,40 @@ if (isset($_POST['add_room'])) {
                         $rezultat = $st->fetch();
 
                         if($rezultat) {
+                          
+                            $up = "UPDATE `accdata` SET `toExtend` = 'extended' WHERE userId = $studentId AND data_id = $data_id";
+                            $stetm= $conn->prepare($up);
+                            $stetm->execute();
+
                             $statusUpdate = "UPDATE `rooms` SET `stateOfroom` = 'occupied' WHERE roomNo=$roomNo";
                             $stUpdate = $conn->prepare($statusUpdate);
                             $stUpdate->execute();
                             echo "Successfully accommodated!";
 
-                            $q= "SELECT * FROM accdata WHERE userId= $ID AND roomNo=$roomNo";
-                            $stmm = $conn->prepare($q);
-                            $stmm->execute();
-                            $rezultatT = $stmm->fetch();
-                            $accId = $rezultatT['data_id'];
-                            
-
-                            $InsertInPayment = "INSERT INTO `payment` (student_id, accdata_id) VALUES (:STUDID, :ACDID)";
+                            $InsertInPayment = "INSERT INTO `payment` (student_id) VALUES (:STUDID)";
                             $InsertData = [
-                            ':STUDID' => $ID,
-                            ':ACDID' =>$accId
+                            ':STUDID' => $studentId
                             ];
                             $stmInser = $conn->prepare($InsertInPayment);
                             $stmInser->execute($InsertData);
                         }
                     }
-                }
                 } else {
-                    array_push($errors, "This room is occupied!"); ?> <div class="row" style="margin-top:1rem"><center><a href="roomSearch.php?action=search">Search for a room</a></div></center> <?php
+                    array_push($errors, "This room is occupied");
                 }
             } else {
-            array_push($errors, "This room is out of order!"); ?> <div class="row" style="margin-top:1rem"><center><a href="roomSearch.php?action=search">Search for a room</a></div></center> <?php
-            } 
-
+                array_push($errors, "Room is out of order");
+            }
         } else {
-        array_push($errors, 'Room with this number do not exist.'); ?> <div class="row" style="margin-top:1rem"><center><a href="roomSearch.php?action=search">Search for a room</a></div></center> <?php
-
-        }
-        } else {
-        array_push($errors, 'Faculty no not exist'); ?> <div class="row" style="margin-top:1rem"><center><a href="addStudent.php?action=addstudent">Add student</a></div></center> <?php
+            array_push($errors, "Room with this number not exist");
         }
     }
 }
-
+  
 
 ?>
 
-<form method="POST" action="data.php?action=addData">
+<form method="POST" action="extendStay.php?studentId=<?php echo $row['id'];?>">
     <section class="Addroom">
         <div class="container">
             <div class="row">
@@ -132,10 +112,10 @@ if (isset($_POST['add_room'])) {
                 <h3 class="title">Asign room</h3>
                 <div class="row g-3" id="row_center">
                     <div class="col-auto">
-                        <input type="text" name="fakNo" class="form-control" placeholder="Faculty No">
+                        <input type="text" name="fakNo" value=<?php echo $row['fakNo'];?> class="form-control" placeholder="Faculty No" disabled>
                     </div>
                     <div class="col-auto">
-                        <input type="text" name="roomNo" class="form-control" placeholder="Room No" id="limit"  >
+                        <input type="text" name="roomNo" class="form-control" placeholder="Room No" id="limit" >
                     </div>
                     <div class="col-auto">
                         <button type="submit" class="btn btn-primary" name="add_room" value= "Add room" style="margin-top:15px" onclick="myFunction()">Add</button>     

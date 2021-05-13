@@ -9,14 +9,15 @@
 
     $editid=$_GET['editId'];
 
-    $editQuery = "SELECT * FROM user u INNER JOIN accdata a ON u.id=a.userId  WHERE u.id=:id";
+    $editQuery = "SELECT * FROM user u INNER JOIN accdata a ON u.id=a.userId  WHERE u.id=:id AND a.toExtend=:exd";
     $editStm = $conn->prepare($editQuery);
 			$editData = [
-			':id' => $editid
+			':id' => $editid,
+            ':exd' => 'notExtended'
 			];
 			$editStm->execute($editData);
             $row=$editStm->fetch();
-            $room = $row['RoomNo'];
+            // $room = $row['RoomNo'];
             // var_dump($room);exit;
             if(isset($_POST['reg_user'])) {   
                 
@@ -31,7 +32,6 @@
                 $fn = filter_input(INPUT_POST, 'fakNo', FILTER_SANITIZE_STRING);
                 $uni = strtoupper(filter_input(INPUT_POST, 'uni', FILTER_SANITIZE_STRING));
                 $course = strtoupper(filter_input(INPUT_POST, 'course', FILTER_SANITIZE_STRING));
-                $sem = filter_input(INPUT_POST, 'sem', FILTER_SANITIZE_STRING);
                 $acc = $_POST['acc'];
                 $is_left = $_POST['is_left'];
                 $roomNo = $_POST['roomNo'];
@@ -55,24 +55,20 @@
                     array_push($errors, "Middle name->Only letters and white space allowed" ) ;
                   }
                 if (empty($uni)) { 
-                    array_push($errors, "Last name is required"); 
+                    array_push($errors, "University is required"); 
                 }  else {
                     if (!preg_match("/^[a-zA-Z-' ]*$/",$uni)) {
                         array_push($errors, "University->Only letters and white space allowed" ) ;
                       }
                 }
                 if (empty($course)) { 
-                    array_push($errors, "Last name is required"); 
+                    array_push($errors, "Course is required"); 
                 }  else {
                     if (!preg_match("/^[a-zA-Z-' ]*$/",$course)) {
                         array_push($errors, "Cours->Only letters and white space allowed" ) ;
                       }
                 }
-                if(!empty($sem)) {
-                    if(!preg_match('/^[0-9]*$/', $sem)){ 
-                        array_push($errors, "Semester->Only digits and white space allowed");
-                    }
-                }
+            
                     if(!preg_match('/^[0-9]*$/', $egn)){ 
                         array_push($errors, "EGN is invalid");
                     } 
@@ -99,9 +95,9 @@
                  if (empty($fn)) { 
                     array_push($errors, "Fak No is required"); 
                 }
-                if (empty($acc)) { 
-                    array_push($errors, "Accommodated is required");
-                } 
+                // if (empty($acc)) { 
+                //     array_push($errors, "Accommodated is required");
+                // } 
                 if (empty($is_left)) { 
                     array_push($errors, "Left is required");
                 } else {
@@ -111,7 +107,15 @@
                 }
               
                 if(empty($errors)) {
-                    $queryy = "SELECT * FROM rooms WHERE roomNo = :nomer AND stateOfroom = 'free'";
+                    $QUERY = "SELECT * FROM accdata WHERE userId=$editid AND toExtend = 'notExtended' ";
+                    $STM = $conn->prepare($QUERY);
+                    $STM->execute();
+                    $R = $STM->fetch();
+                    $soba = $R['RoomNo'];
+                    // var_dump($soba);exit;
+                    $dataId=$R['data_id'];
+                    // var_dump($dataId);exit;
+                    $queryy = "SELECT * FROM rooms WHERE roomNo = :nomer"; 
                     $dataa = [
                         ':nomer' => $_POST['roomNo']
                     ];
@@ -120,15 +124,22 @@
                     $rez=$stt->fetch();
 
                     if($stt->rowCount() == 1) {
+                        $nomer = $rez['roomNo'];
+                        // var_dump($nomer);exit;
                         $roomId = $rez['id']; 
-
+                        $status = $rez['stateOfroom'];
+                        // var_dump($nomer);exit;
+                        if($soba != $nomer && $status != 'free') {
+                            array_push($errors, "This room is occupied");
+                        } else {
                     $querya = "UPDATE user INNER JOIN accdata ON user.id = accdata.userId SET `f_name`=:fn, `m_name`=:md, `l_name`=:ln, `egn`=:egn, `email`=:mail, `phone`=:tel,
-                      `fakNo`=:f, `university`=:u, `course`=:c, `semester`=:s, `accommodated`=:acc, `is_left`=:isleft, `RoomNo`=:roomno, `room_id`=:roomId
-                       WHERE accdata.userId = :ID"; 
+                      `fakNo`=:f, `university`=:u, `course`=:c,  `is_left`=:isleft, `RoomNo`=:roomno, `room_id`=:roomId
+                       WHERE accdata.userId = :ID AND data_id=:dataId"; 
                     $statementup = $conn->prepare($querya);
 
                     $dataadd = [
                         ':ID' => $editid,
+                        ':dataId' => $dataId,
                         ':fn' => $_POST['first_name'],
                         ':md' => $_POST['mid_name'],
                         ':ln' => $_POST['l_name'],
@@ -138,8 +149,7 @@
                         ':f' => $_POST['fakNo'],
                         ':u' => strtoupper($_POST['uni']),
                         ':c' => strtoupper($_POST['course']),
-                        ':s' => $_POST['sem'],
-                        ':acc' => $_POST['acc'],
+                        
                         ':isleft' => $_POST['is_left'],
                         ':roomno' => $_POST['roomNo'],
                         ':roomId' => $roomId,
@@ -158,20 +168,20 @@
                             $statusUpdate = "UPDATE `rooms` SET `stateOfroom` = 'occupied' WHERE roomNo=$roomNo";
                             $stUpdate = $conn->prepare($statusUpdate);
                             $stUpdate->execute();
-                          
-                          $U = "UPDATE `rooms` SET `stateOfroom` = 'free' WHERE roomNo=$room";
+                            if($soba != $nomer) {
+                          $U = "UPDATE `rooms` SET `stateOfroom` = 'free' WHERE roomNo=$soba";
                             $SU = $conn->prepare($U);
                             $SU->execute();
-                          }  
+                          }
+                        }
                        ?>
                        <meta http-equiv="refresh" content="0;url='editUser.php?editId=<?php echo $row['id'];?>'"/>
                         <?php
                     }
                            
-                } else {
-                    array_push($errors,  'This room is occupied');
-                }
-    
+                } 
+            }
+                
                     
                 }
             }
@@ -218,14 +228,12 @@ include_once('errors.php');
                 <div class="col-auto">
                    Course <input type="text" name="course" class="form-control" value="<?php echo $row['course'];?>" id="uppercaseInput" >
                 </div>
-                <div class="col-auto">
-                   Semester <input type="text" name="sem" class="form-control" value="<?php echo $row['semester'];?>"> 
-                </div>
+                
                 <div class="col-auto">
                        Room  <input type="text" name="roomNo" class="form-control" value="<?php echo $row['RoomNo'];?>" id="limit" >
                 </div>
                 <div class="col-auto">
-                       Accommodated <input type="date" name="acc" class="form-control" value="<?php echo $row['accommodated'];?>" id="limit" >
+                       Accommodated <input type="date" name="acc" class="form-control" value="<?php echo $row['accommodated'];?>" id="limit"  >
                 </div>
                 <div class="col-auto">
                       Left <input type="date" name="is_left" class="form-control" value="<?php echo $row['is_left'];?>" id="limit" >
