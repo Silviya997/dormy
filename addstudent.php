@@ -141,9 +141,9 @@ include_once('sessionHeader.php');
                 $statement = $conn->prepare($query);
 
                 $data = [
-                    ':FN' => $_POST['first_name'],
-                    ':MN' => $_POST['mid_name'],
-                    ':LN' => $_POST['l_name'],
+                    ':FN' => ucwords($_POST['first_name']),
+                    ':MN' => ucwords($_POST['mid_name']),
+                    ':LN' => ucwords($_POST['l_name']),
                     ':EGN' => $_POST['egn'],
                     ':MAIL' => $_POST['email'],
                     ':UN' => $_POST['username'],

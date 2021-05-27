@@ -54,9 +54,11 @@
             if ($_POST['left'] < $_POST['acc']) {
               array_push($errors, 'Invalid checkout date');
             } else {
-                $queryCheck = "SELECT * FROM rooms r LEFT JOIN accdata a ON a.room_id=r.id 
-                AND ( accommodated < :IS_LEFT OR is_left > :ACC AND is_left < :IS_LEFT) 
-                WHERE a.room_id IS NULL";
+   
+                $queryCheck = "SELECT * FROM rooms r WHERE r.id NOT IN
+                 (SELECT room_id FROM accdata WHERE accommodated <= :ACC AND is_left >= :IS_LEFT 
+                OR accommodated >= :ACC AND accommodated <= :IS_LEFT OR is_left > :ACC AND is_left < :IS_LEFT)";
+
                 $d = [
                 ':ACC' => $_POST['acc'],
                 ':IS_LEFT' => $_POST['left'],
@@ -64,6 +66,7 @@
                 $stmt = $conn->prepare($queryCheck);
                 $stmt->execute($d);
                 while ($row = $stmt->fetch()) {
+                    
                     ?>
                     <div class="table-responsive-sm">
                     <table class="table table-hover">
@@ -78,7 +81,8 @@
 						<tbody>
                         <tr>
 							<td> <?php echo $row['roomNo'];?></td>
-							<td> <?php echo $row['stateOfroom'];?></td>
+                            <td> <?php echo $row['stateOfroom'];?></td>
+
                             <?php
                             if($row['stateOfroom'] == 'free') {
                                 ?>
@@ -89,8 +93,6 @@
                         </thead>
                     </table>
                     </div>
-
-
                     <?php
                 }
             }

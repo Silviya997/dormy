@@ -12,6 +12,13 @@
     if(!isset($_SESSION['student_id'])) {
         session_start();
     }
+    $sel = "SELECT * FROM user WHERE id=:id";
+    $data = [
+        ':id' => $_SESSION['student_id']
+       ];
+       $stm = $conn->prepare($sel);
+       $stm->execute($data);
+
    $queryshow = "SELECT * FROM user u INNER JOIN accdata a ON u.id=a.userId WHERE u.id = :id";
    $datashow = [
     ':id' => $_SESSION['student_id']
@@ -50,20 +57,28 @@
                 </thead>
                 <tbody>
                 <?php
-                    while($row=$stmshow->fetch(PDO::FETCH_OBJ)) {
-                        $id = $row->id;
+                while($row =$stm->fetch(PDO::FETCH_OBJ)) {
+                    $id = $row->id;
                         $fakNo = $row->fakNo;
+                    ?>
+                    <tr>
+                    <td> <?php echo $row->f_name;?></td>
+                    <td> <?php echo $row->m_name;?></td>
+                    <td> <?php echo $row->l_name;?></td>
+                    <td> <?php echo $row->egn;?></td>
+                    <td> <?php echo $row->fakNo;?></td>
+                    <td> <?php echo $row->phone;?></td>
+                    <td> <?php echo $row->email;?></td>
+                    <td > <?php echo $row->university;?></td>
+                    <td> <?php echo $row->course;?></td>
+                    </tr>
+                    <?php
+                }
+                    while($roww=$stmshow->fetch(PDO::FETCH_OBJ)) {
+                        
                 ?>
                     <tr>
-                        <td> <?php echo $row->f_name;?></td>
-                        <td> <?php echo $row->m_name;?></td>
-                        <td> <?php echo $row->l_name;?></td>
-                        <td> <?php echo $row->egn;?></td>
-                        <td> <?php echo $row->fakNo;?></td>
-                        <td> <?php echo $row->phone;?></td>
-                        <td> <?php echo $row->email;?></td>
-                        <td > <?php echo $row->university;?></td>
-                        <td> <?php echo $row->course;?></td>
+                       
                         <td> <?php echo $row->RoomNo;?></td>
 
                     </tr>

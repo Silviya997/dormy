@@ -7,9 +7,9 @@
 
     if(isset($_POST['reg_user'])) {   
    
-            $first_name = filter_input(INPUT_POST, 'first_name', FILTER_SANITIZE_STRING);
-            $mid_name = filter_input(INPUT_POST, 'mid_name', FILTER_SANITIZE_STRING);
-            $l_name = filter_input(INPUT_POST, 'l_name', FILTER_SANITIZE_STRING);
+            $first_name = ucwords(filter_input(INPUT_POST, 'first_name', FILTER_SANITIZE_STRING));
+            $mid_name = ucwords(filter_input(INPUT_POST, 'mid_name', FILTER_SANITIZE_STRING));
+            $l_name = ucwords(filter_input(INPUT_POST, 'l_name', FILTER_SANITIZE_STRING));
             $egn = filter_input(INPUT_POST, 'egn', FILTER_SANITIZE_STRING);
             $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
             $username = $_POST['username'];
@@ -113,9 +113,9 @@
                 $statement = $conn->prepare($query);
 
                 $data = [
-                    ':FN' => $_POST['first_name'],
-                    ':MN' => $_POST['mid_name'],
-                    ':LN' => $_POST['l_name'],
+                    ':FN' => ucwords($_POST['first_name']),
+                    ':MN' => ucwords($_POST['mid_name']),
+                    ':LN' => ucwords($_POST['l_name']),
                     ':EGN' => $_POST['egn'],
                     ':MAIL' => $_POST['email'],
                     ':UN' => $_POST['username'],
