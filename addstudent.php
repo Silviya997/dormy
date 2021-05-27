@@ -18,6 +18,7 @@ include_once('sessionHeader.php');
             $fn = filter_input(INPUT_POST, 'fakNo', FILTER_SANITIZE_STRING);
             $uni = strtoupper(filter_input(INPUT_POST, 'uni', FILTER_SANITIZE_STRING));
             $course = strtoupper(filter_input(INPUT_POST, 'course', FILTER_SANITIZE_STRING));
+            $role = $_POST['role'];
 
             if (empty($first_name)) { 
                 array_push($errors, "First name is required"); 
@@ -36,22 +37,12 @@ include_once('sessionHeader.php');
             if (!preg_match("/^[a-zA-Z-' ]*$/",$mid_name)) {
                 array_push($errors, "Middle name->Only letters and white space allowed" ) ;
               }
-            if (empty($uni)) { 
-                array_push($errors, "Last name is required"); 
-            }  else {
                 if (!preg_match("/^[a-zA-Z-' ]*$/",$uni)) {
                     array_push($errors, "University->Only letters and white space allowed" ) ;
                   }
-            }
-            if (empty($course)) { 
-                array_push($errors, "Last name is required"); 
-            }  else {
                 if (!preg_match("/^[a-zA-Z-' ]*$/",$course)) {
                     array_push($errors, "Cours->Only letters and white space allowed" ) ;
                   }
-            }
-          
-
             if (!empty($egn)) { 
                 if(!preg_match('/^[0-9]*$/', $egn)){ 
                     array_push($errors, "EGN is invalid");
@@ -81,7 +72,7 @@ include_once('sessionHeader.php');
                 $stmfakNo->execute($fakNodata);
         
                 if ($stmfakNo->rowCount()) {
-                    array_push($errors, 'Fak No already exist');
+                    array_push($errors, 'Fak № already exist');
                 } else {
                     $fakultetenno = $_POST['fakNo'];
                     } 
@@ -90,6 +81,9 @@ include_once('sessionHeader.php');
             if (empty($egn)) { 
                 array_push($errors, "PINs is required"); 
             } 
+            if($role == "select") {
+                array_push($errors,"Select role");
+            }
             if (!empty($email)) { 
                 if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
                     array_push($errors, "Email is invalid");
@@ -136,18 +130,13 @@ include_once('sessionHeader.php');
             if ($password_1 != $_POST['password_2']) {
                 array_push($errors, "The two passwords do not match");
             } 
-            
-             if (empty($fn)) { 
-                array_push($errors, "Fak No is required"); 
-            }
-        
             if (empty($errors)) {
                 $salt = 'dorm987';
                 $password_1 = md5($salt . $_POST['password_1']);
             
 
-                $query = "INSERT INTO  `user` (f_name, m_name, l_name, egn, email, username, pass1,	phone, salt, fakNo, university, course)
-                VALUES (:FN, :MN, :LN, :EGN, :MAIL, :UN, :PAS1, :PHONE, :SALT, :f, :u, :c)";
+                $query = "INSERT INTO  `user` (f_name, m_name, l_name, egn, email, username, pass1,	phone, salt, fakNo, university, course, role)
+                VALUES (:FN, :MN, :LN, :EGN, :MAIL, :UN, :PAS1, :PHONE, :SALT, :f, :u, :c, :role)";
                 
                 $statement = $conn->prepare($query);
 
@@ -164,6 +153,7 @@ include_once('sessionHeader.php');
                     ':f' => $_POST['fakNo'],
                     ':u' => strtoupper($_POST['uni']),
                     ':c' => strtoupper($_POST['course']),
+                    ':role' => $role
                 ];
                 $result = $statement->execute($data); 
 
@@ -184,14 +174,14 @@ include_once('sessionHeader.php');
                     include_once ('errors.php');
                 } 
                 ?>   
-            <h3 class="title">Add student</h3>
+            <h3 class="title">Add user</h3>
             <div class="row g-3" id="row_center">
                
                 <div class="col-auto">
-                    <input type="text" name="first_name" class="form-control" placeholder="First name"  static text>
+                    <input type="text" name="first_name" class="form-control" placeholder="First name" style="text-transform:capitalize;">
                 </div>
                 <div class="col-auto">
-                    <input type="text" name="mid_name" class="form-control" placeholder="Middle name">
+                    <input type="text" name="mid_name" class="form-control" placeholder="Middle name" style="text-transform:capitalize;">
                 </div>
                 <div class="col-auto">
                     <input type="text" name="l_name" class="form-control" placeholder="Last name" style="text-transform:capitalize;">
@@ -218,7 +208,6 @@ include_once('sessionHeader.php');
                 <div class="col-auto">
                     <input type="password" name="password_2" class="form-control" placeholder="Confirm password">
                 </div>
-              
                 <div class="col-auto">
                     <input type="text" name="phone" class="form-control" placeholder="Phone">
                 </div>
@@ -231,13 +220,31 @@ include_once('sessionHeader.php');
                 <div class="col-auto">
                     <input type="text" name="course" class="form-control" placeholder="Course" id="uppercaseInput" >
                 </div>
-               
+                <?php
+                if(isset($_SESSION['user']) && $_SESSION['user'] == 2) { ?>
+                <div class="col-auto">
+                <select name="role" class="form-select" style="margin-top:10px">
+                <option value="select">Select role</option>
+                    <option value="1">User</option>
+                    <option value="2">Admin</option>
+                    <option value="0">Student</option>
+                </select>
+                </div>
+                <?php }
+                if(isset($_SESSION['user']) && $_SESSION['user'] == 1) { ?>
+                    <div class="col-auto">
+                    <select name="role" class="form-select" style="margin-top:10px">
+                    <option value="select">Select role</option>
+                        <option value="0">Student</option>
+                    </select>
+                    </div>
+                    <?php }
+                    ?>
                 <div class="col-auto">
                     <button type="submit" class="btn btn-primary" name="reg_user" value= "Register" style="margin-top:15px" >Register</button>     
                 </div>
             </div>
         </div>
-        
     </div>    
     </section>
 </form>
@@ -248,19 +255,15 @@ var capital = document.getElementById("capital");
 var number = document.getElementById("number");
 var length = document.getElementById("length");
 
-// When the user clicks on the password field, show the message box
 myInput.onfocus = function() {
   document.getElementById("message").style.display = "block";
 }
 
-// When the user clicks outside of the password field, hide the message box
 myInput.onblur = function() {
   document.getElementById("message").style.display = "none";
 }
 
-// When the user starts to type something inside the password field
 myInput.onkeyup = function() {
-  // Validate lowercase letters
   var lowerCaseLetters = /[a-z]/g;
   if(myInput.value.match(lowerCaseLetters)) {  
     letter.classList.remove("invalid");
@@ -270,7 +273,6 @@ myInput.onkeyup = function() {
     letter.classList.add("invalid");
   }
   
-  // Validate capital letters
   var upperCaseLetters = /[A-Z]/g;
   if(myInput.value.match(upperCaseLetters)) {  
     capital.classList.remove("invalid");
@@ -280,7 +282,6 @@ myInput.onkeyup = function() {
     capital.classList.add("invalid");
   }
 
-  // Validate numbers
   var numbers = /[0-9]/g;
   if(myInput.value.match(numbers)) {  
     number.classList.remove("invalid");
@@ -290,7 +291,6 @@ myInput.onkeyup = function() {
     number.classList.add("invalid");
   }
   
-  // Validate length
   if(myInput.value.length >= 8) {
     length.classList.remove("invalid");
     length.classList.add("valid");

@@ -48,7 +48,7 @@ if (isset($_POST['submit'])) {
             $r=$stm->fetchAll();
 
             if($stm->rowCount() > 0) {
-                array_push($errors, 'Faculty No already exist in database .'); 
+                array_push($errors, 'This number has already been assigned a room'); 
             } else {
                 $query = "INSERT INTO accdata (userId, accommodated, is_left, RoomNo, room_id) VALUES (:id, :acc, :isleft, :room, :roomId)";
                 $Data = [
@@ -93,7 +93,7 @@ if (isset($_POST['submit'])) {
                 }
             }
         } else {
-        array_push($errors, 'Faculty no not exist');
+        array_push($errors, 'Faculty № does not exist');
         }
     }
 }

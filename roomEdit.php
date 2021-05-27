@@ -14,7 +14,6 @@ session_start();
 	$row = $room->fetch(PDO::FETCH_OBJ);
 		$roomNo = $row->roomNo;
         $status = $row->stateOfroom;
-		// $status = $row->stateOfroom;
 		if (isset($_POST['update'])) {
             $errors = [];
 			$state = $_POST['stateOfroom'];

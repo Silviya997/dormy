@@ -40,7 +40,7 @@
                                 <div class="card-body">
                                     <h5 class="card-title">About us</h5>
                                     <p class="card-con">Find more info...</p>
-                                    <button type="button" class="btn btn-outline-secondary float-right">Read more...</button>
+                                    <button type="button" class="btn btn-outline-secondary float-right"> <a href="index.php?action=aboutUs"> Read more...</a></button>
                                 </div>
                             </div>
                             </div>

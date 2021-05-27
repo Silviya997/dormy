@@ -40,7 +40,6 @@ if (isset($_POST['add_room'])) {
         $stt = $conn->prepare($queryy);
         $stt->execute($dataa);
         $rez=$stt->fetch();
-        // var_dump($rez);exit;
         if($stt->rowCount() == 1) {
             $roomId = $rez['id'];
             $stateOfroom = $rez['stateOfroom'];
@@ -49,13 +48,12 @@ if (isset($_POST['add_room'])) {
                 $check= "SELECT * FROM user u INNER JOIN accdata a ON u.id=a.userId WHERE u.id = :ID ";
                 $d = [
                 ':ID' => $ID
-                // ':staq' => $roomNo
                 ];
                 $stm = $conn->prepare($check);
                 $stm->execute($d);
                 $r=$stm->fetch();
                 if($stm->rowCount() > 0) {
-                    array_push($errors, 'Faculty No already exist in database .');  ?> <div class="row" style="margin-top:1rem"><center><a href="search.php?action=search">Search for a student</a></div></center> <?php 
+                    array_push($errors, 'This number has already been assigned a room');  ?> <div class="row" style="margin-top:1rem"><center><a href="search.php?action=search">Search for a student</a></div></center> <?php 
 
                 } else {
                     $query = "INSERT INTO accdata (userId, accommodated, is_left, RoomNo, room_id) VALUES (:id, :acc, :isleft, :room, :roomId)";
@@ -82,6 +80,9 @@ if (isset($_POST['add_room'])) {
                             $stUpdate = $conn->prepare($statusUpdate);
                             $stUpdate->execute();
                             echo "Successfully accommodated!";
+                            ?>
+                            <a href="search.php">Find student</a>
+                            <?php
 
                             $q= "SELECT * FROM accdata WHERE userId= $ID AND roomNo=$roomNo";
                             $stmm = $conn->prepare($q);
@@ -108,11 +109,11 @@ if (isset($_POST['add_room'])) {
             } 
 
         } else {
-        array_push($errors, 'Room with this number do not exist.'); ?> <div class="row" style="margin-top:1rem"><center><a href="roomSearch.php?action=search">Search for a room</a></div></center> <?php
+        array_push($errors, 'A room with this № does not exist'); ?> <div class="row" style="margin-top:1rem"><center><a href="roomSearch.php?action=search">Search for a room</a></div></center> <?php
 
         }
         } else {
-        array_push($errors, 'Faculty no not exist'); ?> <div class="row" style="margin-top:1rem"><center><a href="addStudent.php?action=addstudent">Add student</a></div></center> <?php
+        array_push($errors, 'Faculty № does not exist'); ?> <div class="row" style="margin-top:1rem"><center><a href="addStudent.php?action=addstudent">Add student</a></div></center> <?php
         }
     }
 }

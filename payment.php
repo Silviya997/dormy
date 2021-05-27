@@ -5,9 +5,14 @@
     include_once('header.php');
     include_once('sessionHeader.php');
 
+	$query = "SELECT price FROM fee";
+	$statement = $conn->prepare($query);
+	$statement->execute();
+	$taxFee = $statement->fetchColumn();
 
 	if(isset($_POST['pay'])) {
 		$errors = [];
+		
 		if(!empty($_POST['fakNo'])) {
 			$query1 = "SELECT * FROM user u INNER JOIN accdata a ON u.id=a.userId  WHERE u.fakNo=:FakNo AND a.toExtend = :exd";
 			$data = [
@@ -17,10 +22,9 @@
 			$statement1 = $conn->prepare($query1);
 			$statement1->execute($data);
 			$result1 = $statement1->fetch();
-			// var_dump($result1);exit;
 			if ($statement1->rowCount() > 0) {
 				$ID = $result1['id'];
-				// var_dump($ID);exit;
+				$dataId= $result1['data_id'];
 				$select = $_POST['monthSelect'];
 				if($select == "select") {
 					echo "You must select month!";
@@ -31,7 +35,7 @@
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
 						if($row->January == 0) {
-							$fee = 80;
+							$fee = $taxFee;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
@@ -54,7 +58,7 @@
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
 						if($row->February == 0 ) {
-							$fee = 80;
+							$fee = $taxFee;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
@@ -77,7 +81,7 @@
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
 						if($row->March == 0 ) {
-							$fee = 80;
+							$fee = $taxFee;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
@@ -100,7 +104,7 @@
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
 						if($row->April == 0 ) {
-							$fee = 80;
+							$fee = $taxFee;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
@@ -123,7 +127,7 @@
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
 						if($row->May == 0 ) {
-							$fee = 80;
+							$fee = $taxFee;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
@@ -146,7 +150,7 @@
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
 						if($row->June == 0 ) {
-							$fee = 80;
+							$fee = $taxFee;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
@@ -169,7 +173,7 @@
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
 						if($row->July == 0 ) {
-							$fee = 80;
+							$fee = $taxFee;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
@@ -192,7 +196,7 @@
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
 						if($row->August == 0 ) {
-							$fee = 80;
+							$fee = $taxFee;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
@@ -215,7 +219,7 @@
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
 						if($row->September == 0 ) {
-							$fee = 80;
+							$fee = $taxFee;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
@@ -238,7 +242,7 @@
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
 						if($row->October == 0 ) {
-							$fee = 80;
+							$fee = $taxFee;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
@@ -261,7 +265,7 @@
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
 						if($row->November == 0 ) {
-							$fee = 80;
+							$fee = $taxFee;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
@@ -284,7 +288,7 @@
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
 						if($row->December == 0 ) {
-							$fee = 80;
+							$fee = $taxFee;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
@@ -303,7 +307,7 @@
 							echo "Payment for December has already been made";
 						}
 					}		
-					$query = "SELECT * FROM payment p INNER JOIN accdata a ON p.student_id=a.userId WHERE student_id=$ID";
+					$query = "SELECT * FROM payment p INNER JOIN accdata a ON p.accdata_id=a.data_id WHERE accdata_id=$dataId";
 					$stm=$conn->prepare($query);
 					$stm->execute();
 					$r=$stm->fetch();
@@ -326,14 +330,12 @@
 						if ($jan != '0' && $feb != '0' && $march != '0' && $april != '0' && $may != '0' && $june != '0' && $july != '0' && 
 						$aug != '0' && $sep != '0' && $oct != '0' && $nov != '0' && $dec != '0' && $paidd== '1') {
 						
-						$q ="UPDATE `payment` SET `paid`= 0 WHERE student_id = $ID ";
+						$q ="UPDATE `payment` SET `paid`= 0 WHERE student_id = $ID AND accdata_id = $dataId ";
 						
 						$s = $conn->prepare($q);
 						$s->execute();
-
-						
 						}
-				}
+					}
 				}
 			} else {
 				echo "No room has been assigned to this faculty number.";
@@ -342,7 +344,6 @@
 			echo "Faculty No is required!";
 		}
 	}	
-
 ?>
 <form action="payment.php?action=stud_payment" method="POST">
 	<section class="homesection">
@@ -374,7 +375,7 @@
 					</div>
 					<div class="input-group mb-3">
 						<span class="input-group-text" style="margin-top:10px">BGN</span>
-						<input type="text" name="fee" class="form-control" aria-label="Amount (to the nearest dollar)" value="80.00" style="background-color:white" disabled>
+						<input type="text" name="fee" class="form-control" aria-label="Amount (to the nearest dollar)" value="<?php echo $taxFee; ?>" style="background-color:white" disabled>
 					<span class="input-group-text" style="background-color:lightblue;margin-top:10px" >+</span>
 
 						<input type="text" name="add_fee" class="form-control" aria-label="Dollar amount (with dot and two decimal places)" value="0.00">

@@ -17,8 +17,6 @@
 			];
 			$editStm->execute($editData);
             $row=$editStm->fetch();
-            // $room = $row['RoomNo'];
-            // var_dump($room);exit;
             if(isset($_POST['reg_user'])) {   
                 
                 $errors=[];
@@ -95,9 +93,6 @@
                  if (empty($fn)) { 
                     array_push($errors, "Fak No is required"); 
                 }
-                // if (empty($acc)) { 
-                //     array_push($errors, "Accommodated is required");
-                // } 
                 if (empty($is_left)) { 
                     array_push($errors, "Left is required");
                 } else {
@@ -112,9 +107,7 @@
                     $STM->execute();
                     $R = $STM->fetch();
                     $soba = $R['RoomNo'];
-                    // var_dump($soba);exit;
                     $dataId=$R['data_id'];
-                    // var_dump($dataId);exit;
                     $queryy = "SELECT * FROM rooms WHERE roomNo = :nomer"; 
                     $dataa = [
                         ':nomer' => $_POST['roomNo']
@@ -125,10 +118,8 @@
 
                     if($stt->rowCount() == 1) {
                         $nomer = $rez['roomNo'];
-                        // var_dump($nomer);exit;
                         $roomId = $rez['id']; 
                         $status = $rez['stateOfroom'];
-                        // var_dump($nomer);exit;
                         if($soba != $nomer && $status != 'free') {
                             array_push($errors, "This room is occupied");
                         } else {
@@ -190,7 +181,6 @@
 
 <form action="editUser.php?editId=<?php echo $row['id'];?>" method="POST">
 <section>
-<section class="" >
         <div class="container">
     <div class="row">
         <?php

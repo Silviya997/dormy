@@ -5,19 +5,25 @@
     include_once('header.php');
     include_once('sessionHeader.php');
 
-    $studId= $_GET['Id'];
-    $queryy = "SELECT * FROM user u INNER JOIN accdata a ON u.id=a.userId  WHERE id = :id";
+	$studId= $_GET['Id'];
+    $queryy = "SELECT * FROM user u INNER JOIN accdata a ON u.id=a.userId INNER JOIN payment p ON a.data_id=p.accdata_id WHERE id = :id AND a.toExtend = :exd";
     $dataa = [
-    ':id' => $studId
+    ':id' => $studId,
+	':exd' => 'notExtended'
     ];
     $stt = $conn->prepare($queryy);
     $stt->execute($dataa);
     $row=$stt->fetch();
     $FAKnO = $row['fakNo'];
+	$dataId= $row['data_id'];
 
-	if(isset($_POST['pay'])) {
+	$query = "SELECT price FROM fee";
+	$statement = $conn->prepare($query);
+	$statement->execute();
+	$taxFee = $statement->fetchColumn();
+
+	if(isset($_POST['submit']) ) {
 		$errors = [];
-		
 				$select = $_POST['monthSelect'];
 				if($select == "select") {
 					echo "You must select month!";
@@ -28,7 +34,7 @@
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
 						if($row->January == 0) {
-							$fee = 80;
+							$fee = $taxFee;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
@@ -40,9 +46,11 @@
 							];
 							$paySt = $conn->prepare($payUpdate);
 							$paySt->execute($dataUp);
-							echo "Successfully added payment!";	
+							echo "<p>Successfully added payment!</p>";	
+							echo "<p><a href='paySearch.php'>Search payment</a></p>";
 						} else {
-							array_push($errors, "Payment for January has already been made" ) ;
+							echo "<p>Payment for January has already been made</p>";
+							echo "<p><a href='paySearch.php'>Search payment</a></p>";
 						}
 					}
 					if($select == 'February') {
@@ -51,7 +59,7 @@
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
 						if($row->February == 0 ) {
-							$fee = 80;
+							$fee = $taxFee;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
@@ -63,9 +71,11 @@
 							];
 							$paySt = $conn->prepare($payUpdate);
 							$paySt->execute($dataUp);
-							echo "Successfully added payment!";	
+							echo "<p>Successfully added payment!</p>";	
+							echo "<p><a href='paySearch.php'>Search payment</a></p>";
 						} else {
-							echo "Payment for February has already been made";
+							echo "<p>Payment for February has already been made</p>";
+							echo "<p><a href='paySearch.php'>Search payment</a></p>";
 						}
 					}
 					if($select == 'March') {
@@ -74,7 +84,7 @@
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
 						if($row->March == 0 ) {
-							$fee = 80;
+							$fee = $taxFee;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
@@ -86,9 +96,11 @@
 							];
 							$paySt = $conn->prepare($payUpdate);
 							$paySt->execute($dataUp);
-							echo "Successfully added payment!";	
+							echo "<p>Successfully added payment!</p>";	
+							echo "<p><a href='paySearch.php'>Search payment</a></p>";
 						} else {
-							echo "Payment for March has already been made";
+							echo "<p>Payment for March has already been made</p>";
+							echo "<p><a href='paySearch.php'>Search payment</a></p>";
 						}
 					}
 					if($select == 'April') {
@@ -97,7 +109,7 @@
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
 						if($row->April == 0 ) {
-							$fee = 80;
+							$fee = $taxFee;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
@@ -109,9 +121,11 @@
 							];
 							$paySt = $conn->prepare($payUpdate);
 							$paySt->execute($dataUp);
-							echo "Successfully added payment!";	
+							echo "<p>Successfully added payment!</p>";	
+							echo "<p><a href='paySearch.php'>Search payment</a></p>";
 						} else {
-							echo "Payment for April has already been made";
+							echo "<p>Payment for April has already been made</p>";
+							echo "<p><a href='paySearch.php'>Search payment</a></p>";
 						}
 					}
 					if($select == 'May') {
@@ -120,7 +134,7 @@
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
 						if($row->May == 0 ) {
-							$fee = 80;
+							$fee = $taxFee;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
@@ -132,9 +146,11 @@
 							];
 							$paySt = $conn->prepare($payUpdate);
 							$paySt->execute($dataUp);
-							echo "Successfully added payment!";	
+							echo "<p>Successfully added payment!</p>";	
+							echo "<p><a href='paySearch.php'>Search payment</a></p>";
 						} else {
-							echo "Payment for May has already been made";
+							echo "<p>Payment for May has already been made</p>";
+							echo "<p><a href='paySearch.php'>Search payment</a></p>";
 						}
 					}
 					if($select == 'June') {
@@ -143,7 +159,7 @@
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
 						if($row->June == 0 ) {
-							$fee = 80;
+							$fee = $taxFee;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
@@ -155,9 +171,11 @@
 							];
 							$paySt = $conn->prepare($payUpdate);
 							$paySt->execute($dataUp);
-							echo "Successfully added payment!";	
+							echo "<p>Successfully added payment!</p>";	
+							echo "<p><a href='paySearch.php'>Search payment</a></p>";
 						} else {
-							echo "Payment for June has already been made";
+							echo "<p>Payment for June has already been made</p>";
+							echo "<p><a href='paySearch.php'>Search payment</a></p>";
 						}
 					}
 					if($select == 'July') {
@@ -166,7 +184,7 @@
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
 						if($row->July == 0 ) {
-							$fee = 80;
+							$fee = $taxFee;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
@@ -178,9 +196,11 @@
 							];
 							$paySt = $conn->prepare($payUpdate);
 							$paySt->execute($dataUp);
-							echo "Successfully added payment!";	
+							echo "<p>Successfully added payment!</p>";	
+							echo "<p><a href='paySearch.php'>Search payment</a></p>";
 						} else {
-							echo "Payment for July has already been made";
+							echo "<p>Payment for July has already been made</p>";
+							echo "<p><a href='paySearch.php'>Search payment</a></p>";
 						}
 					}
 					if($select == 'August') {
@@ -189,7 +209,7 @@
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
 						if($row->August == 0 ) {
-							$fee = 80;
+							$fee = $taxFee;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
@@ -201,9 +221,11 @@
 							];
 							$paySt = $conn->prepare($payUpdate);
 							$paySt->execute($dataUp);
-							echo "Successfully added payment!";	
+							echo "<p>Successfully added payment!</p>";	
+							echo "<p><a href='paySearch.php'>Search payment</a></p>";
 						} else {
-							echo "Payment for August has already been made";
+							echo "<p>Payment for August has already been made</p>";
+							echo "<p><a href='paySearch.php'>Search payment</a></p>";
 						}
 					}
 					if($select == 'September') {
@@ -212,7 +234,7 @@
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
 						if($row->September == 0 ) {
-							$fee = 80;
+							$fee = $taxFee;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
@@ -224,9 +246,11 @@
 							];
 							$paySt = $conn->prepare($payUpdate);
 							$paySt->execute($dataUp);
-							echo "Successfully added payment!";	
+							echo "<p>Successfully added payment!</p>";	
+							echo "<p><a href='paySearch.php'>Search payment</a></p>";
 						} else {
-							echo "Payment for September has already been made";
+							echo "<p>Payment for September has already been made</p>";
+							echo "<p><a href='paySearch.php'>Search payment</a></p>";
 						}
 					}
 					if($select == 'October') {
@@ -235,7 +259,7 @@
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
 						if($row->October == 0 ) {
-							$fee = 80;
+							$fee = $taxFee;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
@@ -247,9 +271,11 @@
 							];
 							$paySt = $conn->prepare($payUpdate);
 							$paySt->execute($dataUp);
-							echo "Successfully added payment!";	
+							echo "<p>Successfully added payment!</p>";	
+							echo "<p><a href='paySearch.php'>Search payment</a></p>";
 						} else {
-							echo "Payment for October has already been made";
+							echo "<p>Payment for October has already been made</p>";
+							echo "<p><a href='paySearch.php'>Search payment</a></p>";
 						}
 					}
 					if($select == 'November') {
@@ -258,7 +284,7 @@
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
 						if($row->November == 0 ) {
-							$fee = 80;
+							$fee = $taxFee;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
@@ -270,9 +296,11 @@
 							];
 							$paySt = $conn->prepare($payUpdate);
 							$paySt->execute($dataUp);
-							echo "Successfully added payment!";	
+							echo "<p>Successfully added payment!</p>";	
+							echo "<p><a href='paySearch.php'>Search payment</a></p>";
 						} else {
-							echo "Payment for November has already been made";
+							echo "<p>Payment for November has already been made</p>";
+							echo "<p><a href='paySearch.php'>Search payment</a></p>";
 						}
 					}
 					if($select == 'December') {
@@ -281,7 +309,7 @@
 						$stmCheck->execute();
 						$row = $stmCheck->fetch(PDO::FETCH_OBJ);
 						if($row->December == 0 ) {
-							$fee = 80;
+							$fee = $taxFee;
 							$add_fee = $_POST['add_fee'];
 							$sum = $fee + $add_fee;
 							$date = date('Y-m-d');
@@ -294,13 +322,15 @@
 							$paySt = $conn->prepare($payUpdate);
 							$paySt->execute($dataUp);
 							if($paySt) {							
-								echo "Successfully added payment!";	
+								echo "<p>Successfully added payment!</p>";	
+								echo "<p><a href='paySearch.php'>Search payment</a></p>";
+							} else {
+								echo "<p>Payment for December has already been made</p>";
+								echo "<p><a href='paySearch.php'>Search payment</a></p>";
 							}
-						} else {
-							echo "Payment for December has already been made";
 						}
-					}		
-					$query = "SELECT * FROM payment p INNER JOIN accdata a ON p.student_id=a.userId WHERE student_id=$studId";
+					}
+					$query = "SELECT * FROM payment p INNER JOIN accdata a ON p.accdata_id=a.data_id WHERE accdata_id=$dataId";
 					$stm=$conn->prepare($query);
 					$stm->execute();
 					$r=$stm->fetch();
@@ -323,32 +353,32 @@
 						if ($jan != '0' && $feb != '0' && $march != '0' && $april != '0' && $may != '0' && $june != '0' && $july != '0' && 
 						$aug != '0' && $sep != '0' && $oct != '0' && $nov != '0' && $dec != '0' && $paidd== '1') {
 						
-						$q ="UPDATE `payment` SET `paid`= 0 WHERE student_id = $studId ";
+						$q ="UPDATE `payment` SET `paid`= 0 WHERE student_id = $ID AND accdata_id = $dataId ";
 						
 						$s = $conn->prepare($q);
 						$s->execute();
 
-						
-						}
-				    }
+					}
 				}
-	}	
+			}
+		}
+
 
 ?>
-<form action="addPay.php?Id=<?php echo $row['id'];?>" method="POST">
+<form method="POST" action="addPay.php?Id=<?php echo $row['id'];?>">
 	<section class="homesection">
 		<div class="container">
 			<div class="row">
 				<div class="col-md-2"></div>
 				<div class="col-md-8">
+				<?php
+					if(!empty($errors)) {
+						include_once('errors.php');
+					}
+				?>
 				<div class="input-group mb-3">
-                <?php 
-                    if(!empty($errors)) {
-                        include_once('errors.php');
-                    }
-                ?>
 					<span class="input-group-text" id="basic-addon3" style="margin-top:10px">Enter students Faculty No</span>
-					<input type="text" name="fakNo" value=<?php echo $FAKnO; ?> class="form-control" id="basic-url" aria-describedby="basic-addon3" disabled>
+					<input type="text" name="fakNo" value=<?php echo $row['fakNo']; ?> class="form-control" id="basic-url" aria-describedby="basic-addon3" disabled >
 				</div>
 				<div class="form-floating">
 					<select name="monthSelect" class="form-select" id="floatingSelect" aria-label="Floating label select example">
@@ -370,7 +400,7 @@
 					</div>
 					<div class="input-group mb-3">
 						<span class="input-group-text" style="margin-top:10px">BGN</span>
-						<input type="text" name="fee" class="form-control" aria-label="Amount (to the nearest dollar)" value="80.00" style="background-color:white" disabled>
+						<input type="text" name="fee" class="form-control" aria-label="Amount (to the nearest dollar)" value="<?php echo $taxFee; ?>" style="background-color:white" disabled>
 					<span class="input-group-text" style="background-color:lightblue;margin-top:10px" >+</span>
 
 						<input type="text" name="add_fee" class="form-control" aria-label="Dollar amount (with dot and two decimal places)" value="0.00">
@@ -380,7 +410,7 @@
                 </div>
 				<div class="row g-3" id="row_center">
 				<div class="col-auto">
-                    <button type="submit" class="btn btn-primary" name="pay" value= "submit" >Submit</button>     
+                    <button type="submit" class="btn btn-primary" name="submit" value= "submit" >Submit</button>     
                 </div>
 					<center><a href="paySearch.php?action=pay_search" style="color:#fd0d66;">Click here to search for payments</a>	</center>
 				</div>
@@ -388,4 +418,4 @@
 			</div>
 		</div>
 	</section>
-</form>    
+</form> 

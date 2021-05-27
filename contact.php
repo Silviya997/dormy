@@ -6,7 +6,6 @@
     if (!isset($_SESSION)) {
         session_start();
     }
-//  <!-- STUDENT  -->
  
     if(isset($_SESSION['user']) && $_SESSION['user'] == 0) {
         if(!isset($_SESSION['student_id'])) {
@@ -39,17 +38,11 @@
 
  <?php
     
-// ADMIN
     }
     elseif(isset($_SESSION['user']) && $_SESSION['user'] == 1) {
         include_once('sessionHeader.php');
         include_once('contactform.php');
 
-    // }
-    // elseif(isset($_SESSION['user']) && $_SESSION['user'] == 2) {
-    // 
-     // <div>Admin</div>
-  
     } else {
         include_once('common.php');
         include_once('contactform.php');

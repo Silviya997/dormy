@@ -36,7 +36,7 @@
 </form>
 
 <section class="res_section">
-<div class="container">
+<div class="container" style="width:50%;">
 <?php
 
 	if(isset($_POST['check'])) {
@@ -55,7 +55,7 @@
               array_push($errors, 'Invalid checkout date');
             } else {
                 $queryCheck = "SELECT * FROM rooms r LEFT JOIN accdata a ON a.room_id=r.id 
-                AND (accommodated <= :ACC AND is_left >= :IS_LEFT OR accommodated >= :ACC AND accommodated < :IS_LEFT OR is_left > :ACC AND is_left < :IS_LEFT) 
+                AND ( accommodated < :IS_LEFT OR is_left > :ACC AND is_left < :IS_LEFT) 
                 WHERE a.room_id IS NULL";
                 $d = [
                 ':ACC' => $_POST['acc'],
@@ -66,10 +66,13 @@
                 while ($row = $stmt->fetch()) {
                     ?>
                     <div class="table-responsive-sm">
-                    <table class="table">
+                    <table class="table table-hover">
                         <thead class="table-light">
+                        <tr>
                         <th scope="col">Room</th>
                         <th scope="col">Status</th>
+                        <th scope="col"></th>
+
 						</tr>
 						</thead>
 						<tbody>

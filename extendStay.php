@@ -19,21 +19,18 @@ $editData = [
 ];
 $editStm->execute($editData);
 $row=$editStm->fetch();
-// var_dump($row);exit;
 $q="SELECT data_id FROM accdata  WHERE userId = $studentId AND toExtend = 'notExtended'";
-                        $ss=$conn->prepare($q);
-                        $ss->execute();
-                        $r=$ss->fetch();
-                        $data_id = $r['data_id'];
-                        // var_dump($data_id);exit;
-
+    $ss=$conn->prepare($q);
+    $ss->execute();
+    $r=$ss->fetch();
+    $data_id = $r['data_id'];
 if (isset($_POST['add_room'])) {
     $errors = [];
     $roomNo = $_POST['roomNo'];
 
-    if (empty($_POST['roomNo'])) {
-        array_push($errors, 'Enter room number!');
-    } else {
+
+    if (!empty($_POST['roomNo'])) {
+
         $queryy = "SELECT * FROM rooms WHERE roomNo = :nomer";
         $dataa = [
         ':nomer' => $_POST['roomNo']
@@ -70,19 +67,34 @@ if (isset($_POST['add_room'])) {
                           
                             $up = "UPDATE `accdata` SET `toExtend` = 'extended' WHERE userId = $studentId AND data_id = $data_id";
                             $stetm= $conn->prepare($up);
-                            $stetm->execute();
+                            $rr=$stetm->execute();
+                            
+                            $sel = "SELECT data_id FROM accdata WHERE userId = $studentId AND toExtend = 'notExtended' ";
+                            $sels = $conn->prepare($sel);
+                            $sels->execute();
+                            $rr=$sels->fetch();
+                            $id_data = $rr['data_id'];
 
                             $statusUpdate = "UPDATE `rooms` SET `stateOfroom` = 'occupied' WHERE roomNo=$roomNo";
                             $stUpdate = $conn->prepare($statusUpdate);
                             $stUpdate->execute();
-                            echo "Successfully accommodated!";
 
-                            $InsertInPayment = "INSERT INTO `payment` (student_id) VALUES (:STUDID)";
+                            $InsertInPayment = "INSERT INTO `payment` (student_id, accdata_id) VALUES (:STUDID, :ACCID)";
                             $InsertData = [
-                            ':STUDID' => $studentId
+                            ':STUDID' => $studentId,
+                            ':ACCID' => $id_data
                             ];
                             $stmInser = $conn->prepare($InsertInPayment);
                             $stmInser->execute($InsertData);
+
+                            if($stmInser == true) {
+                                ?>
+                                <script type="text/javascript">
+                                alert("Successfully extended stay");
+                                window.location.href = "search.php";
+                                </script>
+                                <?php 
+                            }
                         }
                     }
                 } else {
@@ -95,12 +107,11 @@ if (isset($_POST['add_room'])) {
             array_push($errors, "Room with this number not exist");
         }
     }
-}
+} 
   
 
 ?>
-
-<form method="POST" action="extendStay.php?studentId=<?php echo $row['id'];?>">
+<form method="POST" action="extendStay.php?studentId=<?php echo $row['id'];?>" >
     <section class="Addroom">
         <div class="container">
             <div class="row">
@@ -125,4 +136,3 @@ if (isset($_POST['add_room'])) {
         </div>    
     </section>
 </form>
-

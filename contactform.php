@@ -22,14 +22,14 @@
             elseif(isset($_SESSION['user']) && $_SESSION['user'] == 1) {
         ?>
         <div class="container-fluid">
-                <p style="color:#ea3453;">Please, check email inbox recently. For answering to user, do not replay to his/her email. Use email address from name to compose a new message.</p>
-               <img src="img/email.jpg" class="intro-img">
+                <p style="color:#ea3453;">Please, check email inbox often.</p>
             <?php
                 
             }
         ?>
     </div>
 </section>
+
 <script src="js/googlemap.js"></script>
 
 <script

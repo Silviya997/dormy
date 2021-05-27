@@ -12,7 +12,7 @@
     if(!isset($_SESSION['student_id'])) {
         session_start();
     }
-   $queryshow = "SELECT * FROM `user` WHERE id = :id";
+   $queryshow = "SELECT * FROM user u INNER JOIN accdata a ON u.id=a.userId WHERE u.id = :id";
    $datashow = [
     ':id' => $_SESSION['student_id']
    ];
@@ -44,6 +44,8 @@
                         <th scope="col">Email</th>
                         <th scope="col">University</th>
                         <th scope="col">Course</th>
+                        <th scope="col">Room</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -62,6 +64,8 @@
                         <td> <?php echo $row->email;?></td>
                         <td > <?php echo $row->university;?></td>
                         <td> <?php echo $row->course;?></td>
+                        <td> <?php echo $row->RoomNo;?></td>
+
                     </tr>
                 <?php
                     }
@@ -155,7 +159,7 @@
                             $add = $statementadd->execute($dataadd); 
                             if ($add) {
                                 ?>
-                 <meta http-equiv="refresh" content="0;url='index.php?action=student'"/>
+                 <meta http-equiv="refresh"  content="0;url='index.php?action=student'"/>
 
                                 <?php
                             }

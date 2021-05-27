@@ -12,7 +12,6 @@ include_once('header.php');
         </a>
         <div class="navbar-links">
     <ul>
-      <!-- Guest -->
     <?php 
     if(!isset($_SESSION['user'])) { ?>
       <li <?php
@@ -38,7 +37,6 @@ include_once('header.php');
       ?>><a href="index.php?action=login">Log in</a></li>
       <?php     
       }   
-      // STUDENT
       if(isset($_SESSION['user']) && $_SESSION['user'] == 0) { ?>
         <li <?php
           if (isset($_GET['action']) && $_GET['action'] == 'student') {
@@ -47,7 +45,6 @@ include_once('header.php');
             ?>><a href="index.php?action=student">Home</a></li>
             <?php     
         } 
-      // USER  
       if(isset($_SESSION['user']) && $_SESSION['user'] == 1) { ?>
         <li <?php
           if (!isset($_GET['action'])) {
@@ -56,7 +53,6 @@ include_once('header.php');
             ?>><a href="guardian.php">Home</a></li>
             <?php     
         }
-        // ADMIN
         if(isset($_SESSION['user']) && $_SESSION['user'] == 2) { ?>
           <li <?php
             if (!isset($_GET['action'])) {
@@ -65,9 +61,7 @@ include_once('header.php');
               ?>><a href="admin.php">Home</a></li>
               <?php     
           }
-          
-        // COMMON
-        if(isset($_SESSION['user']) && $_SESSION['user'] != 2) { ?>
+            if(isset($_SESSION['user']) && $_SESSION['user'] != 2) { ?>
           <li <?php
             if (isset($_GET['action']) && $_GET['action'] == 'contact') {
               echo 'class="active"';
@@ -75,7 +69,6 @@ include_once('header.php');
               ?>><a href="index.php?action=contact">Contact</a></li>
               <?php     
           }
-        // USER  
         if(isset($_SESSION['user']) && $_SESSION['user'] == 1) { ?>
           <li <?php
             if (isset($_GET['action']) && $_GET['action'] == 'stud_payment') {

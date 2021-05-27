@@ -147,9 +147,9 @@
 						include_once ('errors.php');
 						} 
 					?>    
-                    <input type="text" name="first_name" class="form-control" placeholder="First name"  static text>
-                    <input type="text" name="mid_name" class="form-control" placeholder="Middle name">
-                    <input type="text" name="l_name" class="form-control" placeholder="Last name">
+                    <input type="text" name="first_name" class="form-control" placeholder="First name" style="text-transform:capitalize;" >
+                    <input type="text" name="mid_name" class="form-control" placeholder="Middle name" style="text-transform:capitalize;" >
+                    <input type="text" name="l_name" class="form-control" placeholder="Last name" style="text-transform:capitalize;">
                     <input type="" name="egn" class="form-control" placeholder="PINs">
                     <input type="text" name="email" class="form-control" placeholder="Email">
                     <input type="text" name="username" class="form-control" placeholder="Username">
@@ -163,9 +163,8 @@
                     </div>
                     <input type="password" name="password_2" class="form-control" placeholder="Confirm password">
                     <input type="text" name="phone" class="form-control" placeholder="Phone">
-                    <input type="checkbox" class="check"> <small>Accept rules and Condition</small><br>
                     <button type="submit" class="btn btn-primary" name="reg_user" value= "Register">Register</button>                   
-                    <a href="login.php"><p> Already a member? Sign in </p></a>
+                    <a href="login.php"><p> Already a member? Log in </p></a>
                 </div>
                 <div class="col-md-3"></div>
             </div>
@@ -180,19 +179,15 @@ var capital = document.getElementById("capital");
 var number = document.getElementById("number");
 var length = document.getElementById("length");
 
-// When the user clicks on the password field, show the message box
 myInput.onfocus = function() {
   document.getElementById("message").style.display = "block";
 }
 
-// When the user clicks outside of the password field, hide the message box
 myInput.onblur = function() {
   document.getElementById("message").style.display = "none";
 }
 
-// When the user starts to type something inside the password field
 myInput.onkeyup = function() {
-  // Validate lowercase letters
   var lowerCaseLetters = /[a-z]/g;
   if(myInput.value.match(lowerCaseLetters)) {  
     letter.classList.remove("invalid");
@@ -202,7 +197,6 @@ myInput.onkeyup = function() {
     letter.classList.add("invalid");
   }
   
-  // Validate capital letters
   var upperCaseLetters = /[A-Z]/g;
   if(myInput.value.match(upperCaseLetters)) {  
     capital.classList.remove("invalid");
@@ -212,7 +206,6 @@ myInput.onkeyup = function() {
     capital.classList.add("invalid");
   }
 
-  // Validate numbers
   var numbers = /[0-9]/g;
   if(myInput.value.match(numbers)) {  
     number.classList.remove("invalid");
@@ -222,7 +215,6 @@ myInput.onkeyup = function() {
     number.classList.add("invalid");
   }
   
-  // Validate length
   if(myInput.value.length >= 8) {
     length.classList.remove("invalid");
     length.classList.add("valid");
