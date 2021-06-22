@@ -11,11 +11,7 @@
 ?>
 <form action="roomSearch.php?action=search" method="POST">
     <section class="Searchroom">
-        <?php
-        if(!empty($errors)) {
-            include_once('errors.php');
-        }
-        ?>
+       
 
         <div class="container">
         <h3 class="title">Search for a room</h3>
@@ -56,8 +52,8 @@
             } else {
    
                 $queryCheck = "SELECT * FROM rooms r WHERE r.id NOT IN
-                 (SELECT room_id FROM accdata WHERE accommodated <= :ACC AND is_left >= :IS_LEFT 
-                OR accommodated >= :ACC AND accommodated <= :IS_LEFT OR is_left > :ACC AND is_left < :IS_LEFT)";
+                 (SELECT room_id FROM accdata WHERE (accommodated <= :ACC AND is_left >= :IS_LEFT) 
+                OR (accommodated >= :ACC AND accommodated <= :IS_LEFT) OR (is_left > :ACC AND is_left < :IS_LEFT))";
 
                 $d = [
                 ':ACC' => $_POST['acc'],
@@ -97,6 +93,9 @@
                 }
             }
         }     
+    }
+    if(!empty($errors)) {
+        include_once('errors.php');
     }
 
 ?>

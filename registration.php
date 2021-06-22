@@ -36,6 +36,8 @@
             if (!empty($egn)) { 
                 if(!preg_match('/^[0-9]*$/', $egn)){ 
                     array_push($errors, "EGN is invalid");
+                } elseif (strlen($egn) < 9 || strlen($egn) > 18) {
+                    array_push($errors, "Invalid input. PINS must be between 9 and 18 numbers.");
                 } else {
                         $qUseregn = "SELECT * FROM `user` WHERE egn = :egnn";
                         $stmegn = $conn->prepare($qUseregn);

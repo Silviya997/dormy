@@ -71,15 +71,15 @@
                     <td> <?php echo $row->email;?></td>
                     <td > <?php echo $row->university;?></td>
                     <td> <?php echo $row->course;?></td>
-                    </tr>
+                    <!-- </tr> -->
                     <?php
                 }
                     while($roww=$stmshow->fetch(PDO::FETCH_OBJ)) {
                         
                 ?>
-                    <tr>
+                    <!-- <tr> -->
                        
-                        <td> <?php echo $row->RoomNo;?></td>
+                        <td> <?php echo $roww->RoomNo;?></td>
 
                     </tr>
                 <?php
